@@ -1,0 +1,157 @@
+from django.db import models
+from django.contrib.auth.models import User
+
+# Create your models here.
+
+
+#=============================================================================================================
+# CLASSE MODEL - ADMIN - PERFIL
+#=============================================================================================================
+
+class Perfil(models.Model):
+    perfil_razaosocial = models.CharField("Razão Social", max_length=100)
+    perfil_nomefantasia = models.CharField("Nome de Fantasia",max_length=30)
+    perfil_cnpj = models.CharField("CNPJ", max_length=18)
+    perfil_inscest = models.CharField("Inscrição Estadual", max_length=30, blank=True, null=True)
+    perfil_inscmun = models.CharField("Incrição Municipal", max_length=30, blank=True, null=True)
+    perfil_email = models.CharField("E-mail", max_length=50)
+    perfil_endereco = models.CharField("Endereço", max_length=100)
+    perfil_numero = models.CharField("Número", max_length=20, blank=True, null=True)
+    perfil_complemento = models.CharField("Complemento", max_length=30, blank=True, null=True)
+    perfil_bairro = models.CharField("Bairro", max_length=50)
+    perfil_cidade = models.CharField("Cidade", max_length=50)
+    perfil_cep = models.CharField("CEP", max_length=9)
+    perfil_uf = models.CharField("UF", max_length=2)
+    perfil_telefone1 = models.CharField("Telefone-1", max_length=20)
+    perfil_telefone2 = models.CharField("Telefone-2", max_length=20)
+    perfil_observacoes = models.TextField("Observações", blank=True, null=True)
+    perfil_datafundacao = models.DateField("Data da Fundação")
+    perfil_datacadastro = models.DateTimeField("Data do Cadastro", auto_now_add=True)
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
+
+    def __str__(self):
+        return self.perfil_razaosocial 
+    
+    class Meta:
+        verbose_name = "Perfil(Empresa)"           # Nome no singular no admin
+        verbose_name_plural = "Perfis(Empresas)"   # Nome no plural no admin
+
+#===========================================================================================================================#
+
+# =====================================
+# CLASSE MODEL - ADMIN - USUÁRIO-PERFIL
+# =====================================
+
+class UsuarioPerfil(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+    
+    class Meta:
+        verbose_name = "Usuário x Perfil"           # Nome no singular no admin
+        verbose_name_plural = "Usuários X Perfis"  # Nome no plural no admin
+
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - ADMIN - Status da Associação
+#=============================================================================================================
+
+class StatusAssociacao(models.Model):
+    statusassociacao_descricao = models.CharField("Descrição", max_length=30)
+    
+    def __str__(self):
+        return self.statusassociacao_descricao 
+    
+    class Meta:
+        verbose_name = "Status Associação"           # Nome no singular no admin
+        verbose_name_plural = "Status Associações"  # Nome no plural no admin
+    
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - ADMIN - Tipo de Associado
+#=============================================================================================================
+
+class TipoAssociado(models.Model):
+    tipoassociado_descricao = models.CharField("Descrição", max_length=30)
+    
+    def __str__(self):
+        return self.tipoassociado_descricao 
+    
+    class Meta:
+        verbose_name = "Tipo de Associado"           # Nome no singular no admin
+        verbose_name_plural = "Tipos de Associados"  # Nome no plural no admin
+    
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - ADMIN - Tipo de Plano
+#=============================================================================================================
+
+class TipoPlano(models.Model):
+    tipoplano_descricao = models.CharField("Descrição", max_length=30)
+    
+    def __str__(self):
+        return self.tipoplano_descricao 
+    
+    class Meta:
+        verbose_name = "Tipo de Plano"           # Nome no singular no admin
+        verbose_name_plural = "Tipos de Planos"  # Nome no plural no admin
+    
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - ADMIN - Gênero
+#=============================================================================================================
+
+class Genero(models.Model):
+    genero_descricao = models.CharField("Descrição", max_length=30)
+    
+    def __str__(self):
+        return self.genero_descricao 
+    
+    class Meta:
+        verbose_name = "Gênero"           # Nome no singular no admin
+        verbose_name_plural = "Gêneros"  # Nome no plural no admin
+    
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - ASSOCIADO
+#=============================================================================================================
+
+class Associado(models.Model):    
+    associado_nome = models.CharField("Nome do Associado",max_length=100)   
+    tipoassociado = models.ForeignKey(TipoAssociado, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo Associado")  
+    associado_email = models.CharField("E-mail", max_length=50)    
+    associado_telefone = models.CharField("Telefone-2", max_length=20)
+    tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo do Plano")
+    associado_datacadastro = models.DateTimeField("Data do Cadastro", auto_now_add=True)  
+    #================================================================================================================================
+    associado_observacoes = models.TextField("Observações", blank=True, null=True)    
+    associado_codigo = models.CharField("Código Interno", max_length=30, blank=True, null=True)    
+    usuarioadm = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
+
+    def __str__(self):
+        return self.associado_nome    
+    
+#===========================================================================================================================#
+
+#======================================================================================================================
+# CLASSE MODEL - ADMIN - USERS - CLONE
+#======================================================================================================================
+class UserClone(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    apelido = models.CharField(max_length=50)
+    foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
+    bio = models.TextField(blank=True)
+    is_admin = models.BooleanField(default=False)
+    tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo de Plano")
+
+    def __str__(self):
+        return self.apelido
+#======================================================================================================================
+    

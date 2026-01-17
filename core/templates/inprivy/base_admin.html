@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>IHW - INPRIVY</title>
+        <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+        <style>
+           html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f58cde;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .wrapper {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+            }
+            main {
+                flex: 1;
+                padding: 30px;
+            }
+            header {
+                background-color: #a80707;
+                padding: 2px 0;
+                text-align: center;
+                color: white;
+            }
+            nav.menu-container {
+                background-color: #eee;
+                padding: 10px 0;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                display: flex;
+                justify-content: left;
+                
+            }
+            ul.menu {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                gap: 25px;
+            }
+            .menu > li {
+                position: relative;
+            }
+            .menu > li > a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+                font-size: 12px;
+                padding: 8px 20px;
+                border-radius: 10px;
+                display: block;
+                transition: background-color 0.5s;  
+                transition-delay: 0.2s;               
+            }
+            .menu > li > a:hover {
+                background-color: #DA7801;
+                color: white;
+            }
+            .submenu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                z-index: 1000;
+                min-width: 250px;
+                list-style-type: disc;
+                transition-delay: 0.2s; 
+            }
+       
+            .menu li:hover > .submenu {
+                display: block;              
+            }
+            .submenu li {
+                position: relative;                
+            }
+            .submenu li a {
+                padding: 10px 15px;
+                display: block;
+                color: #333;
+                text-decoration: none;
+                font-weight: normal;
+                list-style-type: disc;
+                transition-delay: 0.2s; 
+            }
+            .submenu li a:hover {
+                background-color: #DA7801;
+                color: white;
+            }
+            .submenu .submenu-right {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 100%;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                min-width: 250px;
+                z-index: 1100;
+                list-style-type: disc;
+                transition-delay: 0.2s; 
+            }
+            .submenu li:hover > .submenu-right {
+                display: block;
+            }
+            main {
+                padding: 30px;
+            }
+            footer {
+                position: fixed;     /* fixa o rodapé */
+                bottom: 0;           /* gruda lá embaixo */
+                left: 0;             /* começa da esquerda */
+                width: 100%;         /* ocupa a tela toda */
+                background: #333;  /* cor de fundo */
+                color: #fff;       /* cor do texto */
+                text-align: center;
+                padding: 10px;
+                z-index: 1000;       /* garante que fica por cima */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <h1>INPRIVY — Seu Sistema Liberal, Seu Mundo Exclusivo</h1>
+            </header>
+            <nav class="menu-container">
+                <ul class="menu">
+               <li>
+                   <a href="#">CADASTROS</a>
+                   <ul class="submenu">
+                        <li>
+                          <a href="#">Associado</a>
+                          <ul class="submenu-right">
+                           <li><a href="{% url 'listar_associado' %}">Cadastro</a></li>   
+                            <li><a href="#">Unidades</a></li>   
+                            <li><a href="#">Blocos</a></li> 
+                            <li><a href="#">Imóveis</a></li> 
+                            <li><a href="#">Espaços de Unidades</a></li>                                                                                                               
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">Pessoal</a>
+                          <ul class="submenu-right">
+                            <li><a href="#">Pessoa Jurídica</a></li>
+                            <li><a href="#">Pessoa Física</a></li> 
+                            <li><a href="#">Funcionários</a></li> 
+                            <li><a href="#">Funcionários x Benefícios</a></li> 
+                            <li><a href="#">Funcionários x Dependentes</a></li>  
+                            <li><a href="#">Síndicos</a></li>    
+                            <li><a href="#">Administradores</a></li>                                                                                     
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">Estrutura Condominial</a>
+                          <ul class="submenu-right">
+                            <li><a href="#">Proprietários de Imóveis</a></li>
+                            <li><a href="#">Moradores do Condomínio</a></li>
+                            <li><a href="#">Proprietários X Imóveis</a></li>  
+                            <li><a href="#">Moradores X Imóveis</a></li> 
+                            <li><a href="#">Moradores X Veículos</a></li>
+                            <li><a href="#">Coordenadores de Blocos</a></li>                                 
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">Financeiro</a>
+                          <ul class="submenu-right">
+                            <li><a href="#">À DEFINIR</a></li>
+                            <li><a href="#">À DEFINIR</a></li>
+                            <li><a href="#">À DEFINIR</a></li>  
+                            <li><a href="#">À DEFINIR</a></li> 
+                          </ul>
+                        </li>
+                         <li>
+                          <a href="#">Administração</a>
+                          <ul class="submenu-right">
+                            <li><a href="#">À DEFINIR</a></li>
+                            <li><a href="#">À DEFINIR</a></li>
+                            <li><a href="#">À DEFINIR</a></li>  
+                            <li><a href="#">À DEFINIR</a></li> 
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">Pesquisas</a>
+                          <ul class="submenu-right">
+                            <li><a href="#">Moradores por Imóvel</a></li>                                                                                                                 
+                          </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">FINANCEIRO</a>
+                    <ul class="submenu">
+                        <li>
+                           <a href="#">À Definir</a>
+                           <ul class="submenu-right">
+                              <li><a href="#">À Definir</a></li>
+                              <li><a href="#">À Definir</a></li>
+                              
+                            </ul>
+                        </li>                   
+                        <li>
+                           <a href="#">À Definir</a>
+                           <ul class="submenu-right">
+                                <li>
+                                   <a href="#">À Definir</a>
+                                   <ul class="submenu-right">
+                                       <li><a href="#">À Definir</a></li>
+                                       <li><a href="#">À Definir</a></li>
+                                   </ul>
+                                </li>
+                               
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                    <a href="#">À Definir</a>
+                                    <a href="#">À Definir</a>
+                                    
+                               </li>
+                           </ul>
+                        </li>
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                    <a href="#">À Definir</a>
+                                    <a href="#">À Definir</a>
+                                    
+                               </li>
+                           </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">ADMINISTRAÇÃO</a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                               <li>
+                                 <a href="#">À Definir</a>
+                                 <a href="#">À Definir</a>
+                                 <a href="#">À Definir</a>
+                               </li>
+                            </ul>
+                        </li>
+                        <li><a href="#">À Definir</a></li>                        
+                        <li>
+                          <a href="#">Manutenções</a>
+                          <ul class="submenu-right">
+                               <li>
+                                 <a href="#">Registro de Manutenção</a> 
+                                 <a href="#">À Definir</a>
+                               </li>
+                             
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">Relatórios</a>
+                          <ul class="submenu-right">
+                               <li>
+                                 <a href="#">À Definir</a>
+                                 <a href="#">À Definir</a>
+                               </li>
+                             
+                          </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">RESERVAS E ÁREAS COMUNS</a>
+                    <ul class="submenu">
+                        <li><a href="#">À Definir</a></li>
+                        <li><a href="#">À Definir</a></li>
+                        
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                    <a href="#">À Definir</a>
+                                    <a href="#">À Definir</a>
+                                   
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">PORTARIA E SEGURANÇA</a>
+                    <ul class="submenu">
+                        <li><a href="#">À Definir</a></li>
+                        <li><a href="#">À Definir</a></li>
+                        
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                   <a href="#">À Definir</a>                                 
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">COMUNICAÇÃO</a>
+                    <ul class="submenu">
+                        <li><a href="#">À Definir</a></li>
+                        <li><a href="#">À Definir</a></li>
+                        
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                  <a href="#">À Definir</a>
+                                  <a href="#">À Definir</a>
+                                </li>
+                            </ul>
+                         </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">ACESSO</a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                   
+                                </li>
+                            </ul>
+                        </li> 
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                 <li>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                 </li>
+                            </ul>
+                         </li>                         
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">EXTRAS</a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>            
+                <li>
+                    <a href="#">RELATÓRIOS</a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>                                   
+                                </li>
+                            </ul>
+                        </li> 
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                 <li>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                 </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">À Definir</a>
+                            <ul class="submenu-right">
+                                <li>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                   <a href="#">À Definir</a>
+                                   
+                                </li>
+                            </ul>
+                        </li>                                       
+                    </ul>
+                </li>
+                <li><a href="{% url 'sair' %}">SAIR</a></li>
+            </nav>
+            <br>
+            <h2 style="text-align: center;">Seu espaço privado, seguro e exclusivo, pensado para quem quer explorar, curtir e se expressar sem limites.</h2>
+            <main>
+                {% block content %}
+                {% endblock %}
+            </main>
+            <footer>
+               &copy; INOVAHOSTWEB(IHW)&trade; - Soluções Inteligentes em TI - v.000.000.000
+            </footer>
+        </div>
+    </body>
+</html>

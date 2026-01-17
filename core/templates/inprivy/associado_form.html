@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+{% extends 'inprivy/base_admin.html' %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #3333FF;
+        margin-bottom: 30px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    input, select {
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    .btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-cancelar {
+        background-color: #6c757d;
+    }
+
+    .btn-cancelar:hover {
+        background-color: #5a6268;
+    }
+
+    .mensagem-erro {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #f5c6cb;
+        margin-bottom: 20px;
+    }
+
+    .mensagem-sucesso {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #c3e6cb;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <h2>{% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Pessoa</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn">Salvar</button>
+        <a href="{% url 'listar_associado' %}" class="btn btn-cancelar">Cancelar</a>
+    </form>
+
+    {% if sucesso %}
+        <div class="mensagem-sucesso">
+            <p>{{ sucesso }}</p>
+        </div>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="mensagem-erro">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#id_perfil_cep').mask('00000-000');
+        $('#id_perfil_telefone').mask('(00) 00000-0000');
+        $('#id_perfil_cnpj').mask('00.000.000/0000-00');
+    });
+</script>
+{% endblock %}
+
+{% endblock %}
+
+</html>

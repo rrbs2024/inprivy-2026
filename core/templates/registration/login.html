@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>INPRIVY - Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Roxo escuro, azul petróleo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .login-container input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            background: #6c63ff; /* Lilás uva */
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .login-container input[type="submit"]:hover {
+            background: #8577ff; /* Tom mais claro */
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+        .register-link {
+    color: #e91e63;          /* rosa sexy, muda se quiser */
+    text-decoration: none;  /* tira o sublinhado */
+    font-weight: 600;
+        }
+
+        .register-link:hover {
+    color: #c2185b;          /* cor ao passar o mouse */
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Acesso ao INPRIVY</h2>
+    <p class="subtitle">Seu sistema liberal, seu mundo exclusivo.</p>
+
+    <form method="post" action="{% url 'login' %}" autocomplete="off">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <p class="error">Usuário ou senha incorretos, sua galinha 😢</p>
+        {% endif %}
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Login"
+            autocomplete="off"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Senha"
+            autocomplete="new-password"
+            required
+        >
+
+        <input type="submit" value="Entrar">
+    </form>
+
+    <div class="register-box">
+        <p>Primeira vez aqui, sua bicha curiosa?</p>        
+        <a href="{% url 'termos' %}" class="register-link">
+            Criar minha conta no INPRIVY
+        </a>
+    </div>
+</div>
+
+
+</body>
+</html>

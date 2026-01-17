@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pessoa - PDF</title>
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0; /* cinza claro */
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="text-align: right; margin-bottom: 10px;">
+        <button onclick="window.print()">🖨️ Imprimir / Salvar como PDF</button>
+    </div>
+
+    <h1>Listagem de Pessoas</h1>
+
+    <table>
+        <thead>
+            <tr>
+              <th style="width: 50px;  font-size: 13px;">ID</th>
+              <th style="width: 500px; font-size: 13px;">Nome</th>
+              <th style="width: 200px; font-size: 13px;">Código Interno</th>
+              <th style="width: 200px; font-size: 13px;">Tipo de Associado</th>              
+              <th style="width: 300px; font-size: 13px;">E-mail</th>
+              <th style="width: 300px; font-size: 13px;">Telefone</th>
+              <th style="width: 200px; font-size: 13px;">Tipo de Plano</th>               
+              <th style="width: 200px; font-size: 13px;">Data Cadastro</th>
+              <th style="width: 500px; font-size: 13px;">Observações</th> 
+              <th style="width: 200px; font-size: 13px;">Usuário Responsável</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for indice in associado_imp %}
+            <tr>
+                <td style="width: 50px;  font-size: 13px;">{{ indice.id }}</td>
+                <td style="width: 500px; font-size: 13px;">{{ indice.associado_nome }}</td>
+                <td style="width: 200px; font-size: 13px;">{{ indice.associado_codigo }}</td>
+                <td style="width: 200px; font-size: 13px;">{{ indice.tipoassociado }}</td>               
+                <td style="width: 300px; font-size: 13px;">{{ indice.associado_email }}</td>                
+                <td style="width: 300px; font-size: 13px;">{{ indice.associado_telefone }}</td>
+                <td style="width: 200px; font-size: 13px;">{{ indice.tipoplano }}</td>
+                <td style="width: 200px; font-size: 13px;">{{ indice.associado_datacadastro }}</td>     
+                <td style="width: 500px; font-size: 13px;">{{ indice.associado_observacoes }}</td>                
+                <td style="width: 200px; font-size: 13px;">{{ indice.usuarioadm }}</td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

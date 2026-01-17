@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>RRBS - INPRIVY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;   /* centraliza na horizontal */
+            align-items: flex-start;   /* fica no topo */
+            min-height: 90vh;
+        }
+
+        .terms-container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .terms-box {
+            width: 600px;
+            max-height: 600px;
+            overflow-y: auto;
+            text-align: justify;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+        }      
+
+        .accept-btn {
+            background: #e91e63;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        p {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color:rgb(4, 4, 110);
+        }
+
+    </style>
+</head>
+<div class="terms-container">
+    <h2>Termos e Condições de Uso</h2>
+
+    <div class="terms-box">
+        <p>
+            Ao acessar e utilizar o INPRIVY, você declara que é maior de 18 anos
+            e concorda com todas as regras, responsabilidades e políticas da plataforma.
+        </p>
+        <p>
+           INPRIVY é uma plataforma digital privada, voltada à criação de comunidades liberais, 
+           com acesso restrito a membros, focada em interação, privacidade e conteúdo exclusivo.
+           Aqui o foco é voltado para aqueles que curtem um estilo de vida totalmente liberal, 
+           sem preconceitos, e esse será nosso único objetivo, com exclusão de quaisquer outras
+           temáticas. Antes de solicitar a sua associação, tenha certeza de que o estilo de vida 
+           liberal é realmente o que você curte.
+        </p>
+
+        <p>
+            O INPRIVY respeita a privacidade dos usuários, mas não se responsabiliza
+            por interações realizadas fora do ambiente do sistema.
+        </p>
+
+        <p>
+            O uso indevido da plataforma poderá resultar em suspensão ou exclusão da conta.
+        </p>
+        <p>
+            Ao se registrar, a proposta de cadastro será analisada pela equipe INPRIVY, que poderá ou não aceitar a proposta.
+            O prazo de resposta pode variar entre 10 e 20 dias úteis.
+        </p>
+        <p>
+            Após a aprovação da equipe do INPRIVY, o candidato deverá obter o AVAL de 3(três) associados,
+            para poder integrar o quadro de associados. O INPRIVY se preocupa em oferecer um serviço de relacionamento 
+            seguro para todos os seus usuários.
+        </p>
+        <p>
+            Não será tolerado qualquer tipo de ofensa, discriminação, preconceitos, maus-tratos ou perseguições
+            a outros usuários, nem a utilização de palavras de baixo calão, discussões políticas, religiosas, futebolísticas,
+            ou outros assuntos que possam causar tumultos na plataforma. Tudo isso será passivo de exclusão imediata da conta.
+        </p>
+        <p>
+            As interações e usufrutos do sistema serão de acordo com o plano escolhido pelo associado. Cada plano contemplará
+            determinadas funções, sendo o plano VIP o que dará acesso a todas as funcionalidades, EXCETO: anúncios, comerciais 
+            e publicidades, em geral. Isso só será permitido para o plano COMERCIAL.
+        </p>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="accept-btn">
+            Li e aceito os termos
+        </button>
+    </form>
+</div>

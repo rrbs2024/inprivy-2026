@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>RRBS - INPRIVY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #600000, #600000);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            background: rgba(0, 0, 255, 0.8);
+            padding: 2px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        header h1 {
+            font-size: 2.5em;
+            letter-spacing: 3px;
+            margin: 0;
+            color: #f9f9f9;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        main h2 {
+            font-size: 1.6em;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+        main p {
+            max-width: 700px;
+            font-size: 1.0em;
+            line-height: 1.6;
+            color: #eee;
+        }
+        footer {
+            background: rgba(0, 0, 255, 0.8);
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+            font-size: 1.0em;
+            color: #ccc;
+        }
+        .btn-entrar {
+            background-color: #ff69b4;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+            cursor: pointer;
+        }
+        .btn-entrar:hover {
+            background-color: #ff1493;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>INPRIVY</h1>
+    </header>
+
+    <main>
+        <h2 style="color: #ffff00; font-weight: bold;">
+            ✨ Bem-vinda(o) ao INPRIVY! Sistema de Relacionamento Privado ✨
+        </h2>
+        <br>
+
+        <h3 style="color: #f3c612; font-weight: bold;">
+            Seu espaço privado, seguro e exclusivo, pensado para quem quer explorar, curtir e se expressar sem limites.
+        </h3>
+
+        <p style="color: #ffffff; font-weight: bold;">
+            ✨ Aqui você pode:
+            <br>❤️ Acessar os recursos da rede e interagir com os participantes (de acordo com seu plano).
+            <br>🎯 Participar de grupos privados (caso seja convidado).
+            <br>👀 Ver eventos postados por anunciantes.
+            <br>💻 Conversar via chat (caso permitido).
+            <br>💎 Desbloquear conteúdos exclusivos.
+            <br>🔐 Controlar totalmente seu perfil e privacidade.
+            <br>⚡ Usar funcionalidades avançadas com simplicidade.
+            <br>🌟 Interagir com segurança.
+        </p>
+
+        <p style="color: #ffffff; font-weight: bold;">
+            INPRIVY é mais que um sistema — é seu mundo liberado, protegido e totalmente seu.
+        </p>
+
+        <p style="color: #ffffff; font-weight: bold;">
+            ✨ Entre, explore, aproveite… e seja VIP no que há de melhor. ✨
+        </p>
+
+        <!-- BOTÃO BURRO, PÚBLICO, SEM LÓGICA -->
+        <form action="{% url 'login' %}" method="get">
+            <button type="submit" class="btn-entrar">Entrar</button>
+        </form>
+    </main>
+
+    <footer>
+        © Copyright INOVAHOSTWEB - IHW - 2026
+    </footer>
+</body>
+</html>
+

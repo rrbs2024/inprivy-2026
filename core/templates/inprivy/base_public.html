@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>INPRIVY</title>
+    <link rel="stylesheet" href="{% static 'css/public.css' %}">
+</head>
+<body>
+
+    <!-- TOPO -->
+    <header class="topbar">
+        <div class="logo">INPRIVY</div>
+
+        <div class="user-box">
+            <span class="user-name">
+                <span class="user-label">USUÁRIO:</span> {{ request.user.username }}
+            </span>    
+            <a href="{% url 'sair' %}" class="logout">Sair</a>
+
+        </div>
+    </header>
+
+    <div class="left-line"></div>
+    <div class="right-line"></div>
+
+    <!-- CONTEÚDO -->
+    <main class="container">
+
+        <!-- DESTAQUE -->
+        <section class="card highlight">
+            <h2>Bem-vind(a)(o) 👋</h2>
+            <p>Você está no ambiente principal do INPRIVY.</p>
+        </section>
+
+        <!-- AÇÕES -->
+        <section class="actions">
+            <div class="card action-card">Meu Perfil</div>
+            <div class="card action-card">Agenda</div>
+            <div class="card action-card">Mensagens</div>
+            <div class="card action-card">Conteúdos</div>
+            <div class="card action-card">Amigos</div>
+            <div class="card action-card">Chat</div>            
+            <div class="card action-card">Configurações</div>
+        </section>
+
+        <!-- FEED -->
+        <section class="feed">
+            <div class="card feed-card">
+                <h3>Atualização</h3>
+                <p>Novo conteúdo disponível para você.</p>
+            </div>
+
+            <div class="card feed-card">
+                <h3>Aviso</h3>
+                <p>Em breve novas funcionalidades.</p>
+            </div>
+            <div class="card feed-card">
+                <h3>Novidades</h3>
+                <p>Em breve novas funcionalidades.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- IMAGENS LATERAIS -->
+    <img src="{% static 'img/ihw.png' %}" class="left-image" alt="Decoração esquerda">
+    <img src="{% static 'img/ihw2.png' %}" class="left-image-2" alt="Decoração esquerda">
+    <img src="{% static 'img/img-001.png' %}" class="left-image-3" alt="Decoração esquerda">
+    <img src="{% static 'img/img-002.png' %}" class="left-image-4" alt="Decoração esquerda">
+    
+    <img src="{% static 'img/ihw.png' %}" class="right-image" alt="Decoração direita">
+    <img src="{% static 'img/ihw2.png' %}" class="right-image-2" alt="Decoração direita">
+    <img src="{% static 'img/img-001.png' %}" class="right-image-3" alt="Decoração direita">
+    <img src="{% static 'img/img-002.png' %}" class="right-image-4" alt="Decoração direita">
+
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        INPRIVY - 2026 © INOVAHOSTWEB - v.000.000.000
+    </footer>
+    <div class="bottom-bar"></div>
+
+</body>
+
+
+
+</html>
