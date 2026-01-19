@@ -56,6 +56,7 @@
               <th style="width: 200px; font-size: 13px;">Tipo de Plano</th>               
               <th style="width: 200px; font-size: 13px;">Data Cadastro</th>
               <th style="width: 500px; font-size: 13px;">Observações</th> 
+              <th style="width: 300px; font-size: 13px;">Status Associação</th> 
               <th style="width: 200px; font-size: 13px;">Usuário Responsável</th>
             </tr>
         </thead>
@@ -70,7 +71,8 @@
                 <td style="width: 300px; font-size: 13px;">{{ indice.associado_telefone }}</td>
                 <td style="width: 200px; font-size: 13px;">{{ indice.tipoplano }}</td>
                 <td style="width: 200px; font-size: 13px;">{{ indice.associado_datacadastro }}</td>     
-                <td style="width: 500px; font-size: 13px;">{{ indice.associado_observacoes }}</td>                
+                <td style="width: 500px; font-size: 13px;">{{ indice.associado_observacoes }}</td>
+                <td style="width: 300px; font-size: 13px;">{{ indice.status }}</td>                                
                 <td style="width: 200px; font-size: 13px;">{{ indice.usuarioadm }}</td> 
             </tr>
             {% endfor %}

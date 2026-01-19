@@ -104,9 +104,10 @@ body {
 
 /* FOOTER */
 .footer {
+    
     text-align: center;
-    padding: 20px;
-    font-size: 20px;
+    padding: 23px;
+    font-size: 15px;
     color: #180ad4;
     
 }
@@ -193,7 +194,7 @@ body {
     position: fixed;
     top: 64px;
     bottom: 44px;
-    left: 200px; /* distância da borda, ajusta pra ficar depois da imagem */
+    left: 240px; /* distância da borda, ajusta pra ficar depois da imagem */
     width: 5px;  /* espessura da linha */
     background: #390ed4; /* cor da linha */
     z-index: 5;  /* atrás das imagens, mas na frente do fundo */
@@ -204,104 +205,236 @@ body {
     position: fixed;
     top: 64px;
     bottom: 44px;
-    right: 200px; /* distância da borda */
+    right: 240px; /* distância da borda */
     width: 5px;
     background: #390ed4;
     z-index: 5;
 }
+/*------------------------------------------------------------------------------------------------*/
 
-/* Imagem lateral esquerda */
+/*================================================================================================*/
+
+/* Imagem lateral esquerda - 1 */
 .left-image {
     position: fixed;
     top: 19%;
-    left: 0;
+    left: 10px;
     transform: translateY(-50%);
     z-index: 10;
-    left: 20px;
-    width: 150px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
 }
 
-/* Imagem lateral direita */
+.left-image img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
+}
+
+/* Imagem lateral direita - 1 */
 .right-image {
     position: fixed;
     top: 19%;
-    right: 0;
+    right: 20px;
     transform: translateY(-50%);
     z-index: 10;
-    right: 20px;
-    width: 150px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
 }
+
+.right-image img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+/*================================================================================================*/
 
 /* Imagem lateral esquerda - 2 */
 .left-image-2 {
     position: fixed;
     top: 40%;
-    left: 0;
+    left: 10px;
     transform: translateY(-50%);
     z-index: 10;
-    left: 20px;
-    width: 150px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
+}
+
+.left-image-2 img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
 }
 
 /* Imagem lateral direita - 2 */
 .right-image-2 {
     position: fixed;
     top: 40%;
-    right: 0;
+    right: 20px;
     transform: translateY(-50%);
     z-index: 10;
-    right: 20px;
-    width: 150px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
 }
+
+.right-image-2 img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+/*================================================================================================*/
 
 /* Imagem lateral esquerda - 3 */
 .left-image-3 {
     position: fixed;
     top: 61%;
-    left: 0;
+    left: 10px;
     transform: translateY(-50%);
     z-index: 10;
-    left: 20px;
-    width: 80px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
+}
+
+.left-image-3 img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
 }
 
 /* Imagem lateral direita - 3 */
 .right-image-3 {
     position: fixed;
     top: 61%;
-    right: 0;
+    right: 20px;
     transform: translateY(-50%);
     z-index: 10;
-    right: 20px;
-    width: 80px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
 }
+
+.right-image-3 img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+/*================================================================================================*/
 
 /* Imagem lateral esquerda - 4 */
 .left-image-4 {
     position: fixed;
     top: 82%;
-    left: 0;
+    left: 10px;
     transform: translateY(-50%);
     z-index: 10;
-    left: 20px;
-    width: 80px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
+}
+
+.left-image-4 img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
 }
 
 /* Imagem lateral direita - 4 */
 .right-image-4 {
     position: fixed;
     top: 82%;
-    right: 0;
+    right: 20px;
     transform: translateY(-50%);
     z-index: 10;
-    right: 20px;
-    width: 80px;   /* largura desejada */
-    height: auto;   /* mantém proporção */
+    width: 100px;           /* tamanho do círculo */
+    height: 100px;          /* mesmo que a largura */
+    border-radius: 50%;    /* redondo de verdade */
+    overflow: hidden;      /* corta tudo que sair do círculo */
 }
+
+.right-image-4 img {
+    display: block;        /* tira espaços estranhos */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* preenche sem distorcer */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+/* =========================
+   MENSAGENS DO SISTEMA - hoje 18/01/2026
+========================= */
+
+.messages-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.message-box {
+    max-width: 600px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Warning / degustação */
+.message-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}
+
+/* Success */
+.message-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
+
+/* Error */
+.message-error {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+
+/* Info */
+.message-info {
+    background-color: #cff4fc;
+    color: #055160;
+    border: 1px solid #b6effb;
+}
+
+
+

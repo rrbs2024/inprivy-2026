@@ -3,10 +3,28 @@ from django.urls import path, include
 from . import views_public, views_admin
 from django.contrib.auth import views as auth_views
 from django.core.exceptions import PermissionDenied
+from .views_public import LoginCustomView
 
 
 urlpatterns = [
     
+
+#======================================================================================================================
+# ENDPOINT - VERIFICA STATUS DO USER NO LOGIN
+#======================================================================================================================
+
+    path('login/', LoginCustomView.as_view(), name='login'),
+
+#=========================================
+# ENDPOINT - PERFIL
+#=========================================
+
+    path('perfil/', views_admin.listar_perfil, name='listar_perfil'),
+    path('perfil/adicionar', views_admin.adicionar_perfil, name='adicionar_perfil'),
+    path('perfil/editar/<int:id>', views_admin.editar_perfil, name='editar_perfil'),
+    path('perfil/excluir/<int:id>', views_admin.excluir_perfil, name='excluir_perfil'),
+    path('perfil/imprimir', views_admin.imprimir_perfil, name='imprimir_perfil'),
+
     
 #======================================================================================================================
 # ENDPOINT - PROCESSO INICIAL

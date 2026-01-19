@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% extends 'inprivy/base_admin.html' %}
+
+{% block content %}
+<style>
+  .container {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 30px;
+      background-color: #fff5f5;
+      border: 1px solid #f5c6cb;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+  }
+
+  .titulo-exclusao {
+      color: #d9534f;
+      margin-bottom: 20px;
+      font-size: 24px;
+  }
+
+  .mensagem-exclusao {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 30px;
+  }
+
+  .form-exclusao .botoes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+  }
+
+  .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+  }
+
+  .btn-confirmar {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+  }
+
+  .btn-confirmar:hover {
+      background-color: #c82333;
+  }
+
+  .btn-cancelar {
+      background-color: #6c757d;
+      color: white;
+  }
+
+  .btn-cancelar:hover {
+      background-color: #5a6268;
+  }
+</style>
+
+<div class="container">
+  <h2 class="titulo-exclusao">🗑️ Confirmar Exclusão</h2>
+  <p class="mensagem-exclusao">Tem certeza que deseja excluir o perfil <strong>"{{ tipo.perfil_razaosocial }}"</strong>?</p>
+
+  <form method="post" class="form-exclusao">
+    {% csrf_token %}
+    <div class="botoes">
+      <button type="submit" class="btn btn-confirmar">✅ Sim, Excluir</button>
+      <a href="{% url 'listar_perfil' %}" class="btn btn-cancelar">❌ Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

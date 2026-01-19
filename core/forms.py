@@ -119,8 +119,17 @@ class AssociadoForm(forms.ModelForm):
             'associado_telefone',
             'tipoassociado',
             'tipoplano',
-            'associado_observacoes',
+            'associado_observacoes',           
         ]
+
+        labels = {
+            'associado_nome': 'Nome',
+            'associado_email': 'E-mail',
+            'associado_telefone': 'Telefone',
+            'tipoassociado': 'Tipo de Associado',
+            'tipoplano': 'Plano',
+            'associado_observacoes': 'Observações',                    
+        }
 
         widgets = {
             'associado_nome': forms.TextInput(attrs={
@@ -145,17 +154,11 @@ class AssociadoForm(forms.ModelForm):
                 'placeholder': 'Observações (opcional)',
                 'rows': 4,
                 'class': 'form-control'
+            
             }),
         }
 
-        labels = {
-            'associado_nome': 'Nome',
-            'associado_email': 'E-mail',
-            'associado_telefone': 'Telefone',
-            'tipoassociado': 'Tipo de Associado',
-            'tipoplano': 'Plano',
-            'associado_observacoes': 'Observações',
-        }
+        
 
 #=====================================================================================================================
 
@@ -172,9 +175,11 @@ class AssociadoAdminForm(forms.ModelForm):
             'associado_telefone',
             'tipoplano',            
             'associado_observacoes',
-            'associado_codigo',           
+            'associado_codigo', 
+            'status',          
             
         ]
+
         labels = {
             'associado_nome': 'Nome Fantasia',
             'tipoassociado': 'Tipo de Associado',            
@@ -182,6 +187,7 @@ class AssociadoAdminForm(forms.ModelForm):
             'associado_telefone': 'Telefone',
             'tipoplano': 'Tipo de Plano',
             'associado_observacoes': 'Observações',
+            'status': 'Status Associação',
             
         }
 
@@ -223,6 +229,9 @@ class AssociadoAdminForm(forms.ModelForm):
                 'class': 'form-control',
                 'style': 'width: 100%; padding: 10px; font-size: 13px;',
             }),            
-                       
+            
+            'status': forms.Select(attrs={
+                'class': 'form-control'
+            }),                                   
         }
 #======================================================================================================================

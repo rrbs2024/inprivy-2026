@@ -111,13 +111,42 @@ class Genero(models.Model):
     genero_descricao = models.CharField("Descrição", max_length=30)
     
     def __str__(self):
-        return self.genero_descricao 
-    
+        return self.genero_descricao     
     class Meta:
         verbose_name = "Gênero"           # Nome no singular no admin
         verbose_name_plural = "Gêneros"  # Nome no plural no admin
     
 #===========================================================================================================================#
+
+#======================================================================================================================
+# CLASSE MODEL - USERS-CLONE
+#======================================================================================================================
+class UserClone(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    apelido = models.CharField(max_length=50)
+    foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
+    bio = models.TextField(blank=True)
+    is_admin = models.BooleanField(default=False)
+    tri_indica = models.IntegerField(null=True, blank=True)
+    tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo de Plano")
+    status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status da Associação")
+
+    def __str__(self):
+        return self.apelido
+#======================================================================================================================
+    
+#======================================================================================================================
+# CLASSE MODEL - ADMIN - STATUS DO ASSOCIADO
+#======================================================================================================================
+class StatusAssociado(models.Model):   
+    descricao = models.CharField(max_length=30)    
+
+    def __str__(self):
+        return self.descricao    
+    class Meta:
+        verbose_name = "Status Associado"           # Nome no singular no admin
+        verbose_name_plural = "Status Associados"  # Nome no plural no admin
+#======================================================================================================================
 
 #=============================================================================================================
 # CLASSE MODEL - ASSOCIADO
@@ -133,6 +162,7 @@ class Associado(models.Model):
     #================================================================================================================================
     associado_observacoes = models.TextField("Observações", blank=True, null=True)    
     associado_codigo = models.CharField("Código Interno", max_length=30, blank=True, null=True)    
+    status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status Associação")
     usuarioadm = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
 
     def __str__(self):
@@ -140,18 +170,22 @@ class Associado(models.Model):
     
 #===========================================================================================================================#
 
-#======================================================================================================================
-# CLASSE MODEL - ADMIN - USERS - CLONE
-#======================================================================================================================
-class UserClone(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    apelido = models.CharField(max_length=50)
-    foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
-    bio = models.TextField(blank=True)
-    is_admin = models.BooleanField(default=False)
-    tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo de Plano")
+#=============================================================================================================
+# CLASSE MODEL - ASSOCIADO x PADRINHOS
+#=============================================================================================================
 
-    def __str__(self):
-        return self.apelido
-#======================================================================================================================
+class AssociadoPadrinho(models.Model):        
+    indicado  = models.OneToOneField(Associado, on_delete=models.CASCADE, related_name='padrinhos')  # 1 associado = 1 conjunto de padrinhos
+    padrinho1 = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='padrinho1_de')
+    padrinho2 = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='padrinho2_de')
+    padrinho3 = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='padrinho3_de')
+    assocpadrinho_datacadastro = models.DateTimeField("Data do Cadastro", auto_now_add=True)      
+    assocpadrinho_observacoes = models.TextField("Observações", blank=True, null=True)
+    usuarioadm = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
     
+    
+    def __str__(self):
+        return f"{self.indicado.nome} - Padrinhos: {self.padrinho1.nome}, {self.padrinho2.nome}, {self.padrinho3.nome}"
+        
+#===========================================================================================================================#
+

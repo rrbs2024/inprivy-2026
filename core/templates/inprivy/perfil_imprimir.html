@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - PDF</title>
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0; /* cinza claro */
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="text-align: right; margin-bottom: 10px;">
+        <button onclick="window.print()">🖨️ Imprimir / Salvar como PDF</button>
+    </div>
+
+    <h1>Listagem de Perfis</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 50px;   font-size: 13px;">ID</th>
+                <th style="width: 300px;  font-size: 13px;">Razão Social</th>
+                <th style="width: 100px;  font-size: 13px;">Nome Fantasia</th>
+                <th style="width: 100px;  font-size: 13px;">CNPJ</th>
+                <th style="width: 100px;  font-size: 13px;">E-mail</th>
+                <th style="width: 200px;  font-size: 13px;">Endereço</th>
+                <th style="width: 50px;   font-size: 13px;">Número</th>
+                <th style="width: 50px;   font-size: 13px;">Complemento</th>
+                <th style="width: 100px;  font-size: 13px;">Bairro</th>
+                <th style="width: 100px;  font-size: 13px;">Cidade</th>
+                <th style="width: 50px;   font-size: 13px;">CEP</th>
+                <th style="width: 50px;   font-size: 13px;">UF</th>
+                <th style="width: 100px;  font-size: 13px;">Telefone 1</th>
+                <th style="width: 100px;  font-size: 13px;">Telefone 2</th>
+                <th style="width: 300px;  font-size: 13px;">Observações</th>
+                <th style="width: 100px;  font-size: 13px;">Data Fundação</th>
+                <th style="width: 100px;  font-size: 13px;">Data Cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for indice in perfil_imp %}
+            <tr>
+                <td style="width: 50px;   font-size: 13px;">{{ indice.id }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ indice.perfil_razaosocial }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_nomefantasia }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_cnpj }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_email }}</td>
+                <td style="width: 200px;  font-size: 13px;">{{ indice.perfil_endereco }}</td>
+                <td style="width: 50px;   font-size: 13px;">{{ indice.perfil_numero }}</td>
+                <td style="width: 50px;   font-size: 13px;">{{ indice.perfil_complemento }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_bairro }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_cidade }}</td>
+                <td style="width: 50px;   font-size: 13px;">{{ indice.perfil_cep }}</td>
+                <td style="width: 50px;   font-size: 13px;">{{ indice.perfil_uf }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_telefone1 }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_telefone2 }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ indice.perfil_observacoes }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_datafundacao }}</td>
+                <td style="width: 100px;  font-size: 13px;">{{ indice.perfil_datacadastro }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -49,35 +49,26 @@ def sair_view(request):
 #=====================================================
 
 @login_required()
-def listar_perfil(request):
-    # Só lista o perfil do usuário logado
-    perfis = Perfil.objects.filter(usuario=request.user)
-    return render(request, 'saco/perfil_listar.html', {'perfis': perfis})
+def listar_perfil(request):   
+    perfis = Perfil.objects.all()
+    return render(request, 'inprivy/perfil_listar.html', {'perfis': perfis})
 
 @login_required()
-def adicionar_perfil(request):
-    # Usuário só pode ter um perfil, então opcional: bloqueia adicionar se já tiver perfil
-    if not request.user.is_superuser:
-        if Perfil.objects.filter(usuario=request.user).exists():
-            raise PermissionDenied("Você já tem perfil.")
-
+def adicionar_perfil(request): 
     if request.method == 'POST':
         form = PerfilForm(request.POST)
         if form.is_valid():
             perfil_obj = form.save(commit=False)
-            perfil_obj.usuario = request.user  # associa o perfil ao usuário
+            perfil_obj.usuarioadm = request.user  # associa o perfil ao usuário
             perfil_obj.save()
             return redirect('listar_perfil')
     else:
         form = PerfilForm()
-    return render(request, 'saco/perfil_form.html', {'form': form})
+    return render(request, 'inprivy/perfil_form.html', {'form': form})
 
 @login_required()
 def editar_perfil(request, id):
-    tipo = get_object_or_404(Perfil, pk=id)
-
-    if tipo.usuario != request.user:
-        raise PermissionDenied()
+    tipo = get_object_or_404(Perfil, pk=id)  
 
     if request.method == 'POST':
         form = PerfilForm(request.POST, instance=tipo)
@@ -86,25 +77,21 @@ def editar_perfil(request, id):
             return redirect('listar_perfil')
     else:
         form = PerfilForm(instance=tipo)
-    return render(request, 'saco/perfil_form.html', {'form': form})
+    return render(request, 'inprivy/perfil_form.html', {'form': form})
 
 @login_required()
 def excluir_perfil(request, id):
-    tipo = get_object_or_404(Perfil, pk=id)
-
-    if tipo.usuario != request.user:
-        raise PermissionDenied()
+    tipo = get_object_or_404(Perfil, pk=id)  
 
     if request.method == 'POST':
         tipo.delete()
         return redirect('listar_perfil')
-    return render(request, 'saco/perfil_excluir.html', {'tipo': tipo})
+    return render(request, 'inprivy/perfil_excluir.html', {'tipo': tipo})
 
 @login_required()
-def imprimir_perfil(request):
-    # Só imprime o perfil do usuário logado
-    perfil_imp = Perfil.objects.filter(usuario=request.user).order_by('perfil_razaosocial')
-    return render(request, 'saco/perfil_imprimir.html', {'perfil_imp': perfil_imp})
+def imprimir_perfil(request):   
+    perfil_imp = Perfil.objects.all().order_by('perfil_razaosocial')
+    return render(request, 'inprivy/perfil_imprimir.html', {'perfil_imp': perfil_imp})
 #======================================================================================================================
 
 #======================================================================================================================

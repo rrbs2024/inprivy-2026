@@ -6,10 +6,10 @@
 <style>
     .container {
         width: 1400px;
-        margin: 40px auto;
-        padding: 20px;
+        margin: 0px auto;
+        padding: 10px;
         background-color: #ffffdd; /* cinza bem claro */
-        border-radius: 12px;
+        border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         text-align: center;
     }
@@ -24,7 +24,7 @@
         table-layout: fixed;
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .table th,
@@ -143,6 +143,7 @@
               <th style="width: 200px; font-size: 13px;">Tipo de Plano</th>               
               <th style="width: 200px; font-size: 13px;">Data Cadastro</th>
               <th style="width: 500px; font-size: 13px;">Observações</th> 
+              <th style="width: 300px; font-size: 13px;">Status Associação</th> 
               <th style="width: 200px; font-size: 13px;">Usuário Responsável</th>
               <th>Ações</th>
             </tr>
@@ -158,7 +159,8 @@
                 <td style="width: 300px; font-size: 13px;">{{ tipo.associado_telefone }}</td>
                 <td style="width: 200px; font-size: 13px;">{{ tipo.tipoplano }}</td>
                 <td style="width: 200px; font-size: 13px;">{{ tipo.associado_datacadastro }}</td>     
-                <td style="width: 500px; font-size: 13px;">{{ tipo.associado_observacoes }}</td>                
+                <td style="width: 500px; font-size: 13px;">{{ tipo.associado_observacoes }}</td>
+                <td class="codigo-destaque">{{ tipo.status }}</td>                 
                 <td style="width: 200px; font-size: 13px;">{{ tipo.usuarioadm }}</td>  
                 <td style="display: flex; flex-direction: column; gap: 4px;">
                     <a href="{% url 'editar_associado' tipo.id %}" class="btn">✏️ Editar</a>

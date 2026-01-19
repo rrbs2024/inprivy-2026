@@ -2,7 +2,6 @@
 
 {% load static %}
 
-
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +11,7 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Roxo escuro, azul petróleo */
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -32,10 +31,16 @@
         }
 
         .login-container h2 {
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-size: 28px;
             letter-spacing: 2px;
             color: #fff;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0.8;
         }
 
         .login-container input[type="text"],
@@ -54,7 +59,7 @@
             padding: 12px;
             margin-top: 20px;
             border: none;
-            background: #6c63ff; /* Lilás uva */
+            background: #6c63ff;
             color: white;
             font-size: 16px;
             border-radius: 8px;
@@ -63,24 +68,28 @@
         }
 
         .login-container input[type="submit"]:hover {
-            background: #8577ff; /* Tom mais claro */
+            background: #8577ff;
         }
 
         .error-message {
-            color: #ff6b6b;
-            margin-top: 10px;
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid #ff6b6b;
+            color: #ffb3b3;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
+
         .register-link {
-    color: #e91e63;          /* rosa sexy, muda se quiser */
-    text-decoration: none;  /* tira o sublinhado */
-    font-weight: 600;
+            color: #e91e63;
+            text-decoration: none;
+            font-weight: 600;
         }
 
         .register-link:hover {
-    color: #c2185b;          /* cor ao passar o mouse */
+            color: #c2185b;
         }
-
-
     </style>
 </head>
 <body>
@@ -89,12 +98,19 @@
     <h2>Acesso ao INPRIVY</h2>
     <p class="subtitle">Seu sistema liberal, seu mundo exclusivo.</p>
 
+    {# 🔥 MENSAGENS DO DJANGO (STATUS, BLOQUEIO, ETC) 🔥 #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="error-message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <form method="post" action="{% url 'login' %}" autocomplete="off">
         {% csrf_token %}
 
-        {% if form.errors %}
-            <p class="error">Usuário ou senha incorretos, sua galinha 😢</p>
-        {% endif %}
+      
 
         <input
             type="text"
@@ -116,13 +132,12 @@
     </form>
 
     <div class="register-box">
-        <p>Primeira vez aqui, sua bicha curiosa?</p>        
+        <p>Primeira vez aqui, sua bicha curiosa?</p>
         <a href="{% url 'termos' %}" class="register-link">
             Criar minha conta no INPRIVY
         </a>
     </div>
 </div>
-
 
 </body>
 </html>

@@ -1,106 +1,115 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.urls import path, include
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
-from datetime import date
-from datetime import datetime
-from django.db import  IntegrityError
 from django.contrib import messages
-from django.http import JsonResponse
+from django.contrib.auth.views import LoginView
 
-from django.template.loader import get_template
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-
-from io import BytesIO
-from django.db.models import Q, F, Value, CharField
-from django.utils.dateparse import parse_date
-from itertools import chain
-from operator import attrgetter
-from decimal import Decimal
-from django.core.exceptions import PermissionDenied
-from django.db.models.functions import Length
-
-from .models import Associado, UserClone
+from core.decorators import trial_5_minutos
+from .models import UserClone
 from .forms import AssociadoForm
 
-# Create your views here.
+
+# =============================================================================================================
+# VIEW - TEMPO DE DEGUSTAÇÃO PARA USER SEM PLANO ATIVO
+# =============================================================================================================
+@login_required
+@trial_5_minutos
+def home_public(request):
+    return render(request, 'inprivy/base_public.html')
+
 
 # ================================
 # VIEW - PÁGINA INICIAL
 # ================================
-
 def iniciar(request):
     return render(request, 'inprivy/iniciar.html')
 
-@login_required(login_url='/login/')
-def home(request):    
-    return render(request, 'inprivy/home.html')
 
-def sair_view(request):
-    logout(request)
-    return redirect('iniciar')
-#==============================================================================================================
-
-# =============================================================================================================
-# VIEW - TERMOS DE ASSOCIAÇÃO
-# =============================================================================================================
-
+# ================================
+# VIEW - TERMOS
+# ================================
 def termos(request):
     if request.method == 'POST':
         return redirect('register')
-
     return render(request, 'inprivy/termos.html')
-#==============================================================================================================
 
-#=====================================================
-# VIEW - REGISTER - ASSOCIADO
-#=====================================================
 
+# ================================
+# VIEW - REGISTER
+# ================================
 def register(request):
     if request.method == 'POST':
         form = AssociadoForm(request.POST)
         if form.is_valid():
             associado = form.save(commit=False)
-            associado.usuarioadm = request.user if request.user.is_authenticated else None
             associado.save()
-            return redirect('login')  # ou home, ou onde tu quiser, sua safada
+            return redirect('login')
     else:
         form = AssociadoForm()
 
     return render(request, 'inprivy/register.html', {'form': form})
-#======================================================================================================================
 
-# ================================
-# VIEW - PÁGINA INICIAL PÚBLICA
-# ================================
-def iniciar(request):
-    return render(request, 'inprivy/iniciar.html')
 
 # ================================
 # VIEW - PÓS LOGIN
 # ================================
 @login_required
 def pos_login(request):
-    userclone = request.user.userclone  # pega info extra do usuário
+    userclone = request.user.userclone
 
     if userclone.is_admin:
-        return redirect('home_admin')  # chama a view do admin
+        return redirect('home_admin')
     else:
-        return redirect('home_public')   # chama a view do usuário comum
+        return redirect('home_public')
 
-# ================================
-# VIEW - HOME DO USUÁRIO COMUM
-# ================================
-@login_required
-def home_public(request):
-    return render(request, 'inprivy/base_public.html')  # esse template vai estender base_public.html
+
+# =============================================================================================================
+# VIEW - LOGIN CUSTOMIZADO COM STATUS
+# =============================================================================================================
+class LoginCustomView(LoginView):
+    template_name = 'registration/login.html'
+
+    def form_valid(self, form):
+        user = form.get_user()
+        userclone = user.userclone
+
+        # 🚫 usuário sem status
+        if not userclone.status:
+            logout(self.request)
+            messages.error(self.request, 'Usuário sem status definido.')
+            return self.render_to_response(self.get_context_data(form=form))
+
+        # ✅ ATIVO → entra normal
+        if userclone.status.id == 3:
+            return super().form_valid(form)
+
+        # 🟡 INADIMPLENTE → entra em degustação
+        if userclone.status.id == 5:
+            self.request.session['mensagem_degustacao'] = (
+                '⚠️ Você está inadimplente, mas pode usar o sistema por 5 minutos para degustação.'
+            )
+            return super().form_valid(form)
+
+        # 🔒 BLOQUEIOS
+        logout(self.request)
+
+        if userclone.status.id == 1:
+            messages.error(self.request, 'Seu cadastro está pendente da administração INPRIVY.')
+        elif userclone.status.id == 2:
+            messages.error(self.request, 'Seu plano necessita de 3 (três) indicações para ser ativado.')
+        elif userclone.status.id == 4:
+            messages.error(self.request, 'Seu acesso foi suspenso.')
+        elif userclone.status.id == 6:
+            messages.error(self.request, 'Sua conta foi excluída.')
+        else:
+            messages.error(self.request, 'Seu acesso não está liberado.')
+
+        return self.render_to_response(self.get_context_data(form=form))
+
 
 # ================================
 # LOGOUT
 # ================================
 def sair_view(request):
-    from django.contrib.auth import logout
     logout(request)
     return redirect('iniciar')

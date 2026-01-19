@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+{% extends 'inprivy/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container {
+        width: 1470px;
+        margin: 0px auto;
+        padding: 20px;
+        background-color: #ffffdd; /* cinza bem claro */
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .h2 {
+        text-align: center;
+        color: #3333FF; /* azul forte */
+        margin-bottom: 30px;
+    }
+
+    .table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .table th,
+    .table td {
+        width: 200px;
+        padding: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border: 1px solid #ccc;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 12px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #d9e6ff; /* azul clarinho */
+        color: #000066; /* azul escuro */
+    }
+
+    .btn {
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff; /* azul */
+        transition: background-color 0.3s ease;
+        margin: 0 4px;
+        font-size: 14px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* azul mais escuro */
+    }
+
+    .btn-novo {
+        display: inline-block;
+        margin-bottom: 15px;
+        background-color: #28a745; /* verde */
+    }
+
+    .btn-novo:hover {
+        background-color: #1e7e34; /* verde escuro */
+    }
+
+    .acoes-superiores {
+        text-align: right;
+        margin-bottom: 15px;
+    }
+
+    .btn-cancelar {
+        background-color: #6c757d; /* cinza escuro */
+        color: white;
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .btn-cancelar:hover {
+        background-color: #5a6268; /* cinza mais escuro */
+    }
+
+    .btn-pdf {
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        background-color: #17a2b8; /* azul claro */
+        transition: background-color 0.3s ease;
+        font-size: 14px;
+    }
+
+    .btn-pdf:hover {
+        background-color: #138496; /* azul mais escuro */
+    }
+</style>
+
+<div class="container">
+    <h2>Consulta de Perfil</h2>
+
+    <!-- Botão para gerar PDF -->
+    <div class="acoes-superiores">
+        <a href="{% url 'imprimir_perfil' %}" target="_blank" class="btn btn-secondary">
+            📄 Imprimir / Gerar PDF
+        </a>
+        <!-- <a href="{% url 'adicionar_perfil' %}" class="btn btn-novo">+ Novo Perfil</a> -->
+    </div>
+
+    <!-- Tabela com os registros -->
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 50px;   font-size: 13px;">ID</th>
+                <th style="width: 500px;  font-size: 13px;">Razão Social</th>
+                <th style="width: 300px;  font-size: 13px;">Nome Fantasia</th>
+                <th style="width: 300px;  font-size: 13px;">CNPJ</th>
+                <th style="width: 300px;  font-size: 13px;">E-mail</th>
+                <th style="width: 300px;  font-size: 13px;">Telefone1</th>
+                <th style="width: 300px;  font-size: 13px;">Telefone2</th>
+                <th style="width: 300px;  font-size: 13px;">Data Fundação</th>
+                <th style="width: 300px;  font-size: 13px;">Data Cadastro</th>
+                <th style="width: 200px;  font-size: 13px;">Usuário Responsável</th>
+                <!-- <th>Ações</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for tipo in perfis %}
+            <tr>
+                <td style="width: 50px;   font-size: 13px;">{{ tipo.id }}</td>
+                <td style="width: 500px;  font-size: 13px;">{{ tipo.perfil_razaosocial }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_nomefantasia }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_cnpj }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_email }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_telefone1 }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_telefone2 }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_datafundacao }}</td>
+                <td style="width: 300px;  font-size: 13px;">{{ tipo.perfil_datacadastro }}</td>
+                <td style="width: 200px; font-size: 13px;">{{ tipo.usuario }}</td>
+                <!-- <td style="display: flex; flex-direction: column; gap: 4px;"> -->
+                    <!-- <a href="{% url 'editar_perfil' tipo.id %}" class="btn">✏️ Editar</a> -->
+                    <!-- <a href="{% url 'excluir_perfil' tipo.id %}" class="btn" onclick="return confirm('Tem certeza que deseja excluir este Perfil?');">🗑️ Excluir</a> -->
+                <!-- </td> -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Nenhum Perfil Cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center">
+        <a href="{% url 'home_admin' %}" class="btn-cancelar">⬅ Voltar para a Página Principal</a>
+    </div>
+</div>
+
+{% endblock %}
+
+</html>

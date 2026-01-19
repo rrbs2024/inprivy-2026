@@ -8,6 +8,27 @@
 </head>
 <body>
 
+    <!-- MENSAGEM DE DEGUSTAÇÃO (SESSION) -->
+    {% if request.session.mensagem_degustacao %}
+        <div class="messages-wrapper">
+            <div class="message-box message-warning">
+               {{ request.session.mensagem_degustacao }}
+            </div>
+        </div>
+    {% endif %}
+
+
+    <!-- MENSAGENS DO SISTEMA (messages framework) -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- TOPO -->
     <header class="topbar">
         <div class="logo">INPRIVY</div>
@@ -17,10 +38,10 @@
                 <span class="user-label">USUÁRIO:</span> {{ request.user.username }}
             </span>    
             <a href="{% url 'sair' %}" class="logout">Sair</a>
-
         </div>
     </header>
 
+    <!-- LINHAS VERTICAIS -->
     <div class="left-line"></div>
     <div class="right-line"></div>
 
@@ -37,10 +58,12 @@
         <section class="actions">
             <div class="card action-card">Meu Perfil</div>
             <div class="card action-card">Agenda</div>
+            <div class="card action-card">Eventos</div>
             <div class="card action-card">Mensagens</div>
             <div class="card action-card">Conteúdos</div>
             <div class="card action-card">Amigos</div>
-            <div class="card action-card">Chat</div>            
+            <div class="card action-card">Chat</div>     
+            <div class="card action-card">FotoLog</div>           
             <div class="card action-card">Configurações</div>
         </section>
 
@@ -55,6 +78,7 @@
                 <h3>Aviso</h3>
                 <p>Em breve novas funcionalidades.</p>
             </div>
+
             <div class="card feed-card">
                 <h3>Novidades</h3>
                 <p>Em breve novas funcionalidades.</p>
@@ -71,18 +95,16 @@
     
     <img src="{% static 'img/ihw.png' %}" class="right-image" alt="Decoração direita">
     <img src="{% static 'img/ihw2.png' %}" class="right-image-2" alt="Decoração direita">
-    <img src="{% static 'img/img-001.png' %}" class="right-image-3" alt="Decoração direita">
-    <img src="{% static 'img/img-002.png' %}" class="right-image-4" alt="Decoração direita">
+    <img src="{% static 'img/img-001.png' %}" class="right-image-3" alt="Decoração direita">   
 
+    <img src="{% static 'img/img-002.png' %}" class="right-image-4" alt="Avatar">
 
     <!-- RODAPÉ -->
     <footer class="footer">
-        INPRIVY - 2026 © INOVAHOSTWEB - v.000.000.000
+        INPRIVY - 2026 - © INOVAHOSTWEB - v.0.0.0
     </footer>
+
     <div class="bottom-bar"></div>
 
 </body>
-
-
-
 </html>

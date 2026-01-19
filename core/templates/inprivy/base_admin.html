@@ -35,7 +35,7 @@
             }
             nav.menu-container {
                 background-color: #eee;
-                padding: 10px 0;
+                padding: 5px 0;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 display: flex;
                 justify-content: left;
@@ -141,14 +141,18 @@
                <li>
                    <a href="#">CADASTROS</a>
                    <ul class="submenu">
-                        <li>
+                        <li>                          
+                          <a href="#">Perfil</a>
+                          <ul class="submenu-right">
+                           <li><a href="{% url 'listar_perfil' %}">Consultar Perfil</a></li> 
+                           <li><a href="#">Definir</a></li>                                                                                                               
+                          </ul>
+                        </li>
+                        <li>                          
                           <a href="#">Associado</a>
                           <ul class="submenu-right">
-                           <li><a href="{% url 'listar_associado' %}">Cadastro</a></li>   
-                            <li><a href="#">Unidades</a></li>   
-                            <li><a href="#">Blocos</a></li> 
-                            <li><a href="#">Imóveis</a></li> 
-                            <li><a href="#">Espaços de Unidades</a></li>                                                                                                               
+                           <li><a href="{% url 'listar_associado' %}">Cadastro</a></li> 
+                           <li><a href="#">Definir</a></li>                                                                                                               
                           </ul>
                         </li>
                         <li>
@@ -156,46 +160,13 @@
                           <ul class="submenu-right">
                             <li><a href="#">Pessoa Jurídica</a></li>
                             <li><a href="#">Pessoa Física</a></li> 
-                            <li><a href="#">Funcionários</a></li> 
-                            <li><a href="#">Funcionários x Benefícios</a></li> 
-                            <li><a href="#">Funcionários x Dependentes</a></li>  
-                            <li><a href="#">Síndicos</a></li>    
-                            <li><a href="#">Administradores</a></li>                                                                                     
+                            <li><a href="#">Funcionários</a></li>                                                                                                           
                           </ul>
-                        </li>
-                        <li>
-                          <a href="#">Estrutura Condominial</a>
-                          <ul class="submenu-right">
-                            <li><a href="#">Proprietários de Imóveis</a></li>
-                            <li><a href="#">Moradores do Condomínio</a></li>
-                            <li><a href="#">Proprietários X Imóveis</a></li>  
-                            <li><a href="#">Moradores X Imóveis</a></li> 
-                            <li><a href="#">Moradores X Veículos</a></li>
-                            <li><a href="#">Coordenadores de Blocos</a></li>                                 
-                          </ul>
-                        </li>
-                        <li>
-                          <a href="#">Financeiro</a>
-                          <ul class="submenu-right">
-                            <li><a href="#">À DEFINIR</a></li>
-                            <li><a href="#">À DEFINIR</a></li>
-                            <li><a href="#">À DEFINIR</a></li>  
-                            <li><a href="#">À DEFINIR</a></li> 
-                          </ul>
-                        </li>
-                         <li>
-                          <a href="#">Administração</a>
-                          <ul class="submenu-right">
-                            <li><a href="#">À DEFINIR</a></li>
-                            <li><a href="#">À DEFINIR</a></li>
-                            <li><a href="#">À DEFINIR</a></li>  
-                            <li><a href="#">À DEFINIR</a></li> 
-                          </ul>
-                        </li>
+                        </li>                   
                         <li>
                           <a href="#">Pesquisas</a>
                           <ul class="submenu-right">
-                            <li><a href="#">Moradores por Imóvel</a></li>                                                                                                                 
+                            <li><a href="#">Definir</a></li>                                                                                                                 
                           </ul>
                         </li>
                     </ul>
@@ -282,57 +253,8 @@
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="#">RESERVAS E ÁREAS COMUNS</a>
-                    <ul class="submenu">
-                        <li><a href="#">À Definir</a></li>
-                        <li><a href="#">À Definir</a></li>
-                        
-                        <li>
-                            <a href="#">À Definir</a>
-                            <ul class="submenu-right">
-                                <li>
-                                    <a href="#">À Definir</a>
-                                    <a href="#">À Definir</a>
-                                   
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">PORTARIA E SEGURANÇA</a>
-                    <ul class="submenu">
-                        <li><a href="#">À Definir</a></li>
-                        <li><a href="#">À Definir</a></li>
-                        
-                        <li>
-                            <a href="#">À Definir</a>
-                            <ul class="submenu-right">
-                                <li>
-                                   <a href="#">À Definir</a>                                 
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">COMUNICAÇÃO</a>
-                    <ul class="submenu">
-                        <li><a href="#">À Definir</a></li>
-                        <li><a href="#">À Definir</a></li>
-                        
-                        <li>
-                            <a href="#">À Definir</a>
-                            <ul class="submenu-right">
-                                <li>
-                                  <a href="#">À Definir</a>
-                                  <a href="#">À Definir</a>
-                                </li>
-                            </ul>
-                         </li>
-                    </ul>
-                </li>
+                                
+               
                 <li>
                     <a href="#">ACESSO</a>
                     <ul class="submenu">
@@ -357,21 +279,7 @@
                          </li>                         
                     </ul>
                 </li>
-                <li>
-                    <a href="#">EXTRAS</a>
-                    <ul class="submenu">
-                        <li>
-                            <a href="#">À Definir</a>
-                            <ul class="submenu-right">
-                                <li>
-                                   <a href="#">À Definir</a>
-                                   <a href="#">À Definir</a>
-                                   <a href="#">À Definir</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>            
+                 
                 <li>
                     <a href="#">RELATÓRIOS</a>
                     <ul class="submenu">
@@ -409,7 +317,7 @@
                 <li><a href="{% url 'sair' %}">SAIR</a></li>
             </nav>
             <br>
-            <h2 style="text-align: center;">Seu espaço privado, seguro e exclusivo, pensado para quem quer explorar, curtir e se expressar sem limites.</h2>
+            <h2 style="margin-top: -3px; text-align: center;">Seu espaço privado, seguro e exclusivo, pensado para quem quer explorar, curtir e se expressar sem limites.</h2>
             <main>
                 {% block content %}
                 {% endblock %}
