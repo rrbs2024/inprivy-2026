@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Timeline - INPRIVY</title>
+    <link rel="stylesheet" href="{% static 'css/timeline.css' %}">    
+</head>
+<body>
+
+<h2>Timeline</h2>
+
+<div class="timeline-container">
+
+    {% for post in posts %}
+    <div class="post-card">
+
+        <div class="post-header">
+            <div class="post-avatar">
+                {% if post.associado.avatar %}
+                    <img src="{{ post.associado.avatar.url }}" alt="{{ post.associado.associado_nome }}">
+                {% else %}
+                    <div style="width:48px; height:48px; border-radius:50%; background:#e6e67d;"></div>
+                {% endif %}
+            </div>
+            <div>
+                <div class="post-user">{{ post.associado.associado_nome }}</div>
+                <div class="post-date">{{ post.criado_em|date:"d/m/Y H:i" }}</div>
+            </div>
+        </div>
+
+        <div class="post-text">{{ post.texto }}</div>
+
+        <div class="post-media">
+            {% if post.imagem %}
+                <img src="{{ post.imagem.url }}" alt="Imagem do post">
+            {% endif %}
+            {% if post.video %}
+                <video controls>
+                    <source src="{{ post.video.url }}" type="video/mp4">
+                </video>
+            {% endif %}
+        </div>
+
+    </div>
+    {% empty %}
+        <div class="timeline-empty">Nenhuma publicação ainda.</div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

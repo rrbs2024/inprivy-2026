@@ -157,13 +157,15 @@ class Associado(models.Model):
     tipoassociado = models.ForeignKey(TipoAssociado, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo Associado")  
     associado_email = models.CharField("E-mail", max_length=50)    
     associado_telefone = models.CharField("Telefone-2", max_length=20)
+    associado_uf = models.CharField("UF do Associado", max_length=2, null=True, blank=True)
     tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo do Plano")
     associado_datacadastro = models.DateTimeField("Data do Cadastro", auto_now_add=True)  
     #================================================================================================================================
     associado_observacoes = models.TextField("Observações", blank=True, null=True)    
-    associado_codigo = models.CharField("Código Interno", max_length=30, blank=True, null=True)    
+    associado_codigo = models.CharField("Código Interno", max_length=30, blank=True, null=True)  
+    associado_avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  
     status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status Associação")
-    usuarioadm = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
+    usuarioadm = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.associado_nome    
@@ -171,7 +173,7 @@ class Associado(models.Model):
 #===========================================================================================================================#
 
 #=============================================================================================================
-# CLASSE MODEL - ASSOCIADO x PADRINHOS
+# CLASSE MODEL - ASSOCIADO x PADRINHO
 #=============================================================================================================
 
 class AssociadoPadrinho(models.Model):        
@@ -189,3 +191,95 @@ class AssociadoPadrinho(models.Model):
         
 #===========================================================================================================================#
 
+#=============================================================================================================
+# CLASSE MODEL - ASSOCIADO x AMIGO
+#=============================================================================================================
+
+class AssociadoAmigo(models.Model):        
+    origem  = models.OneToOneField(Associado, on_delete=models.CASCADE, related_name='amigo_origem')  # 1 associado = 1 conjunto de padrinhos
+    amigo = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='meu_amigo')    
+    assocamigo_datacadastro = models.DateTimeField("Data do Cadastro", auto_now_add=True)      
+    assocamigo_observacoes = models.TextField("Observações", blank=True, null=True)
+    usuarioadm = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
+    
+    
+    def __str__(self):
+        return f"{self.origem.nome} - Amigo: {self.amigo.nome}"
+        
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - ASSOCIADO x APADRINHADO
+#=============================================================================================================
+
+class AssociadoApadrinhado(models.Model):        
+    padrinho  = models.OneToOneField(Associado, on_delete=models.CASCADE, related_name='padrinho')  # 1 associado = 1 conjunto de padrinhos
+    apadrinhado = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='apadrinhado')    
+    assocapad_datacadastro = models.DateTimeField("Data do Cadastro", auto_now_add=True)      
+    assocapad_observacoes = models.TextField("Observações", blank=True, null=True)
+    usuarioadm = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Usuário")
+    
+    
+    def __str__(self):
+        return f"{self.padrinho.nome} - Amigo: {self.apadrinhado.nome}"
+        
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - MENSAGEM ASSOCIADO 
+#=============================================================================================================
+class MensagemAssociado(models.Model):
+    remetente = models.ForeignKey(
+        Associado,
+        on_delete=models.CASCADE,
+        related_name='mensagens_enviadas'
+    )
+    destinatario = models.ForeignKey(
+        Associado,
+        on_delete=models.CASCADE,
+        related_name='mensagens_recebidas'
+    )
+    mensagem = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+    lida = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        return f"De {self.remetente} para {self.destinatario}"
+    #===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - TIMELINE 
+#=============================================================================================================
+
+class TimelinePost(models.Model):
+    associado = models.ForeignKey(
+        Associado,
+        on_delete=models.CASCADE,
+        related_name='posts'
+    )
+
+    texto = models.TextField()
+
+    imagem = models.ImageField(
+        upload_to='timeline/imagens/',
+        blank=True,
+        null=True
+    )
+
+    video = models.FileField(
+        upload_to='timeline/videos/',
+        blank=True,
+        null=True
+    )
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        return f"Post de {self.associado} em {self.criado_em}"

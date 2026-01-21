@@ -21,7 +21,8 @@ from operator import attrgetter
 from decimal import Decimal
 from django.core.exceptions import PermissionDenied
 from django.db.models.functions import Length
-
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from .models import Perfil, UsuarioPerfil, User, Associado
 from .forms import  PerfilForm, AssociadoAdminForm
 
@@ -109,8 +110,29 @@ def adicionar_associado(request):
         form = AssociadoAdminForm(request.POST)
         if form.is_valid():
             associado = form.save(commit=False)
-            associado.usuarioadm = request.user  # usuário logado
+
+            # Garantir username único usando associado_nome
+            base_username = form.cleaned_data['associado_nome']
+            username = base_username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+
+            # Criar senha aleatória
+            password = User.objects.make_random_password()
+            user = User.objects.create(
+                username=username,
+                email=associado.associado_email,
+                password=make_password(password),
+                is_active=True
+            )
+
+            # Vincular User ao Associado
+            associado.usuarioadm = user
             associado.save()
+
+            messages.success(request, f'Associado {associado.associado_nome} criado com usuário {username}')
             return redirect('listar_associado')
         else:
             messages.error(request, 'Formulário inválido. Verifique os campos.')
@@ -119,6 +141,7 @@ def adicionar_associado(request):
 
     return render(request, 'inprivy/associado_form.html', {'form': form})
 
+
 @login_required()
 def editar_associado(request, id):
     associado = get_object_or_404(Associado, pk=id)
@@ -126,7 +149,30 @@ def editar_associado(request, id):
     if request.method == 'POST':
         form = AssociadoAdminForm(request.POST, instance=associado)
         if form.is_valid():
-            form.save()
+            associado = form.save(commit=False)
+
+            # Criar User automaticamente se ainda não existir
+            if not associado.usuarioadm:
+                base_username = associado.associado_nome
+                username = base_username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+
+                password = User.objects.make_random_password()
+                user = User.objects.create(
+                    username=username,
+                    email=associado.associado_email,
+                    password=make_password(password),
+                    is_active=True
+                )
+
+                associado.usuarioadm = user  # vincula o User ao Associado
+                # UserClone será criado automaticamente pelo signal
+
+            associado.save()
+            messages.success(request, f'Associado {associado.associado_nome} atualizado com sucesso.')
             return redirect('listar_associado')
     else:
         form = AssociadoAdminForm(instance=associado)

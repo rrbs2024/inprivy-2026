@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Postagem - INPRIVY</title>    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .timeline-container {
+            display: flex;
+            justify-content: center;
+            padding: 80px 20px;
+        }
+        .post-card {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+        .post-card h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .post-card textarea {
+            width: 96%;
+            min-height: 100px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            font-size: 14px;
+        }
+        .post-card input[type="file"] {
+            width: 100%;
+        }
+        .post-card button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: #e6d8c8;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        /* Preview opcional */
+        .preview-container {
+            margin-bottom: 15px;
+        }
+        .preview-container img, .preview-container video {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="timeline-container">
+    <div class="post-card">
+        <h3>Nova publicação</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div style="margin-bottom: 15px;">
+                {{ form.texto.errors }}
+                <textarea
+                    name="texto"
+                    placeholder="No que você está pensando?"
+                    required
+                >{{ form.texto.value|default_if_none:'' }}</textarea>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="imagem">Escolher imagem:</label><br>
+                {{ form.imagem.errors }}
+                <input type="file" id="imagem" name="imagem" accept="image/*">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="video">Escolher vídeo:</label><br>
+                {{ form.video.errors }}
+                <input type="file" id="video" name="video" accept="video/*">
+            </div>
+            
+            <button type="submit">Publicar</button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        const file = event.target.files[0];
+        if(file){
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            preview.appendChild(img);
+        }
+    }
+
+    function previewVideo(event) {
+        const preview = document.getElementById('video-preview');
+        preview.innerHTML = '';
+        const file = event.target.files[0];
+        if(file){
+            const video = document.createElement('video');
+            video.src = URL.createObjectURL(file);
+            video.controls = true;
+            preview.appendChild(video);
+        }
+    }
+</script>
+
+</body>
+</html>

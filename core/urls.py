@@ -1,9 +1,9 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from . import views_public, views_admin
 from django.contrib.auth import views as auth_views
-from django.core.exceptions import PermissionDenied
 from .views_public import LoginCustomView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -57,16 +57,31 @@ urlpatterns = [
     # ======================
     # ASSOCIADO (ADMIN)
     # ======================
+    
     path('associado/', views_admin.listar_associado, name='listar_associado'),
     path('associado/adicionar/', views_admin.adicionar_associado, name='adicionar_associado'),
     path('associado/editar/<int:id>/', views_admin.editar_associado, name='editar_associado'),
     path('associado/excluir/<int:id>/', views_admin.excluir_associado, name='excluir_associado'),
     path('associado/imprimir/', views_admin.imprimir_associado, name='imprimir_associado'),
 
-
-
-
-
+    # ======================
+    # ENDPOINT - TIMELINE
+    # ======================
     
-    
+    path('timeline/', views_public.timeline, name='timeline'),
+
+    # =================================
+    # ENDPOINT - TIMELINE - POSTAGEM
+    # =================================
+
+    path('timeline/postar/', views_public.postar_timeline, name='postar_timeline'),
+
+
+
+    path('meu-perfil/', views_public.meu_perfil, name='meu_perfil'),
+
+           
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

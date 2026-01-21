@@ -5,6 +5,26 @@
     <meta charset="UTF-8">
     <title>INPRIVY</title>
     <link rel="stylesheet" href="{% static 'css/public.css' %}">
+
+    <!-- CORREÇÃO: imagens decorativas não roubam clique -->
+    <style>
+        .left-image,
+        .left-image-2,
+        .left-image-3,
+        .left-image-4,
+        .right-image,
+        .right-image-2,
+        .right-image-3,
+        .right-image-4 {
+            pointer-events: none;
+        }
+
+        /* Garante que os cards do menu sejam clicáveis */
+        .card.action-card {
+            pointer-events: auto;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,7 +36,6 @@
             </div>
         </div>
     {% endif %}
-
 
     <!-- MENSAGENS DO SISTEMA (messages framework) -->
     {% if messages %}
@@ -50,21 +69,25 @@
 
         <!-- DESTAQUE -->
         <section class="card highlight">
-            <h2>Bem-vind(a)(o) 👋</h2>
+            <h2>Bem-vind(a)(o) - 
+                <span style="color: #ff6b6b; font-weight: bold;">{{ request.user.username }}</span> 👋
+            </h2>
             <p>Você está no ambiente principal do INPRIVY.</p>
         </section>
 
-        <!-- AÇÕES -->
+        <!-- AÇÕES / MENU -->
         <section class="actions">
-            <div class="card action-card">Meu Perfil</div>
-            <div class="card action-card">Agenda</div>
-            <div class="card action-card">Eventos</div>
-            <div class="card action-card">Mensagens</div>
-            <div class="card action-card">Conteúdos</div>
-            <div class="card action-card">Amigos</div>
-            <div class="card action-card">Chat</div>     
-            <div class="card action-card">FotoLog</div>           
-            <div class="card action-card">Configurações</div>
+            <a href="{% url 'meu_perfil' %}" class="card action-card">Meu Perfil</a>
+            <a href="{% url 'postar_timeline' %}" class="card action-card">Postagem</a>
+            <a href="/timeline/" class="card action-card">Timeline</a>
+            <a href="/agenda/" class="card action-card">Agenda</a>
+            <a href="/eventos/" class="card action-card">Eventos</a>
+            <a href="/mensagens/" class="card action-card">Mensagens</a>
+            <a href="/conteudos/" class="card action-card">Conteúdos</a>
+            <a href="/amigos/" class="card action-card">Amigos</a>
+            <a href="/chat/" class="card action-card">Chat</a>
+            <a href="/fotolog/" class="card action-card">FotoLog</a>
+            <a href="/configuracoes/" class="card action-card">Configurações</a>
         </section>
 
         <!-- FEED -->
@@ -81,13 +104,13 @@
 
             <div class="card feed-card">
                 <h3>Novidades</h3>
-                <p>Em breve novas funcionalidades.</p>
+                <p>Estamos chegando com força, para oferecer o que tem de melhor, em um site de relacionamento liberal!</p>
             </div>
         </section>
 
     </main>
 
-    <!-- IMAGENS LATERAIS -->
+    <!-- IMAGENS LATERAIS (NÃO BLOQUEIAM CLIQUE) -->
     <img src="{% static 'img/ihw.png' %}" class="left-image" alt="Decoração esquerda">
     <img src="{% static 'img/ihw2.png' %}" class="left-image-2" alt="Decoração esquerda">
     <img src="{% static 'img/img-001.png' %}" class="left-image-3" alt="Decoração esquerda">
@@ -96,7 +119,6 @@
     <img src="{% static 'img/ihw.png' %}" class="right-image" alt="Decoração direita">
     <img src="{% static 'img/ihw2.png' %}" class="right-image-2" alt="Decoração direita">
     <img src="{% static 'img/img-001.png' %}" class="right-image-3" alt="Decoração direita">   
-
     <img src="{% static 'img/img-002.png' %}" class="right-image-4" alt="Avatar">
 
     <!-- RODAPÉ -->
@@ -108,3 +130,5 @@
 
 </body>
 </html>
+
+

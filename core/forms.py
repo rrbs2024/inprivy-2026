@@ -1,5 +1,6 @@
 from django import forms
-from .models import Perfil, Associado
+from django.contrib.auth.models import User
+from .models import Perfil, Associado, TimelinePost
 
 
 #=====================================================
@@ -164,7 +165,7 @@ class AssociadoForm(forms.ModelForm):
 
 #=====================================================
 # CLASSE FORM - ADM INPRIVY - ASSOCIADO
-#====================================================
+#=====================================================
 class AssociadoAdminForm(forms.ModelForm):
     class Meta:
         model = Associado
@@ -234,4 +235,44 @@ class AssociadoAdminForm(forms.ModelForm):
                 'class': 'form-control'
             }),                                   
         }
+#======================================================================================================================
+
+#=====================================================
+# CLASSE FORM - TIMELINE POSTAGEM
+#====================================================
+class TimelinePostForm(forms.ModelForm):
+    class Meta:
+        model = TimelinePost
+        fields = ['texto', 'imagem', 'video']
+
+    texto = forms.CharField(
+        required=False,  # agora texto não é obrigatório
+        widget=forms.Textarea(attrs={'placeholder': 'No que você está pensando?'}),
+    )
+#======================================================================================================================
+
+#=====================================================
+# CLASSE FORM - MEU PERFIL(ASSOCIADO)
+#=====================================================
+class MeuPerfilForm(forms.ModelForm):
+    class Meta:
+        model = Associado
+        fields = [
+            'associado_nome',
+            'associado_email',       # email editável
+            'tipoassociado',
+            'associado_telefone',
+            'associado_uf',
+            'tipoplano',
+            'associado_observacoes',
+            'associado_avatar',
+        ]
+        widgets = {
+            'associado_nome': forms.TextInput(attrs={'placeholder': 'Nome completo'}),
+            'associado_email': forms.EmailInput(attrs={'placeholder': 'E-mail'}),
+            'associado_telefone': forms.TextInput(attrs={'placeholder': 'Telefone'}),
+            'associado_uf': forms.TextInput(attrs={'placeholder': 'UF'}),
+            'associado_observacoes': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Observações'}),
+        }
+
 #======================================================================================================================

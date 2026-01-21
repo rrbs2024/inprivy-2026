@@ -3,10 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponse
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404, redirect
 
 from core.decorators import trial_5_minutos
-from .models import UserClone
-from .forms import AssociadoForm
+from .models import UserClone, TimelinePost, Associado
+from .forms import AssociadoForm, TimelinePostForm, MeuPerfilForm
 
 
 # =============================================================================================================
@@ -33,7 +37,6 @@ def termos(request):
         return redirect('register')
     return render(request, 'inprivy/termos.html')
 
-
 # ================================
 # VIEW - REGISTER
 # ================================
@@ -41,14 +44,20 @@ def register(request):
     if request.method == 'POST':
         form = AssociadoForm(request.POST)
         if form.is_valid():
-            associado = form.save(commit=False)
-            associado.save()
-            return redirect('login')
+            nome = form.cleaned_data['associado_nome']
+
+            # Verifica duplicidade de nome (login futuro)
+            if Associado.objects.filter(associado_nome=nome).exists():
+                form.add_error('associado_nome', 'Esse nome já está sendo usado como login.')
+            else:
+                # Salva o associado normalmente
+                associado = form.save(commit=False)
+                associado.save()
+                return redirect('login')
     else:
         form = AssociadoForm()
 
     return render(request, 'inprivy/register.html', {'form': form})
-
 
 # ================================
 # VIEW - PÓS LOGIN
@@ -106,10 +115,65 @@ class LoginCustomView(LoginView):
 
         return self.render_to_response(self.get_context_data(form=form))
 
+# =====================================================================================================================
+# VIEW PUBLIC -LOGOUT
+# =====================================================================================================================
 
-# ================================
-# LOGOUT
-# ================================
 def sair_view(request):
     logout(request)
     return redirect('iniciar')
+
+# =====================================================================================================================
+# VIEW PUBLIC - TIMELINE
+# =====================================================================================================================
+
+@login_required
+def timeline(request):  
+    posts = TimelinePost.objects.filter(ativo=True)
+    return render(request, 'inprivy/timeline.html', {'posts': posts})
+
+# =====================================================================================================================
+# VIEW PUBLIC - TIMELINE - POSTAGEM
+# =====================================================================================================================
+
+@login_required
+def postar_timeline(request):
+    # Pega o associado pelo user logado
+    associado = get_object_or_404(Associado, usuarioadm=request.user)
+    
+    if request.method == 'POST':
+        # Passa também request.FILES para receber imagem e vídeo
+        form = TimelinePostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.associado = associado  # vincula ao associado
+            post.save()
+            return redirect('timeline')  # redireciona pra timeline
+    else:
+        form = TimelinePostForm()
+    
+    return render(request, 'inprivy/postar_timeline.html', {'form': form})
+
+# =====================================================================================================================
+# VIEW PUBLIC - MEU PERFIL
+# =====================================================================================================================
+
+@login_required
+def meu_perfil(request):
+    associado = get_object_or_404(Associado, usuarioadm=request.user)
+
+    if request.method == 'POST':
+        form = MeuPerfilForm(request.POST, request.FILES, instance=associado)
+        if form.is_valid():
+            form.save()  # salva os dados do Associado
+
+            # Atualiza o email no UserClone também
+            if hasattr(associado, 'userclone'):
+                associado.userclone.email = associado.associado_email
+                associado.userclone.save()
+
+            return redirect('meu_perfil')
+    else:
+        form = MeuPerfilForm(instance=associado)
+
+    return render(request, 'inprivy/meu_perfil.html', {'form': form, 'associado': associado})

@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil - INPRIVY</title>
+    <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ecdfb5;
+            margin: 0;
+            padding: 0;
+        }
+        .perfil-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            border: 1px solid #e0d9c2;
+        }
+        .perfil-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .perfil-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+            border: 2px solid #d9cbb1;
+        }
+        .perfil-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;     /* garante que apareça */
+        }
+        .perfil-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #6b5e4b;
+        }
+        .perfil-form label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #8b5e09;
+        }
+        .perfil-form input[type="text"],
+        .perfil-form input[type="email"],
+        .perfil-form textarea,
+        .perfil-form select,
+        .perfil-form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .perfil-form textarea {
+            resize: vertical;
+        }
+        .perfil-form button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: #e6d8c8;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .perfil-form button:hover {
+            background: #d4c0a8;
+        }
+
+        h2 {
+            text-align: center;
+            color: #8b5e09; /* bege escuro */
+            margin-top: 30px;
+            font-size: xx-large;
+        }
+        
+    </style>
+        <header style="background:#e6d8c8; padding:15px; text-align:center; color:#8b5e09; font-size:22px; font-weight:bold;">
+            INPRIVY - Meu Perfil
+        </header>
+</head>
+<body>
+
+<div class="perfil-container">
+
+    <div class="perfil-header">
+        <div class="perfil-avatar">
+           {% if associado.associado_avatar %}
+                <img src="{{ associado.associado_avatar.url }}" alt="{{ associado.associado_nome }}">
+           {% else %}
+                <div style="width:120px; height:120px; border-radius:50%; background:#e6e67d;"></div>
+           {% endif %}
+        </div>
+
+        <h2>{{ request.user.associado.associado_nome }}</h2>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="perfil-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <label for="id_associado_nome">Nome(login)</label>
+        {{ form.associado_nome }}
+
+        <label for="id_associado_email">E-mail</label>
+        {{ form.associado_email }}
+
+        <label for="id_associado_telefone">Telefone</label>
+        {{ form.associado_telefone }}
+
+        <label for="id_associado_uf">UF</label>
+        {{ form.associado_uf }}
+
+        <label for="id_tipoassociado">Tipo de Associado</label>
+        {{ form.tipoassociado }}
+
+        <label for="id_tipoplano">Tipo de Plano</label>
+        {{ form.tipoplano }}
+
+        <label for="id_associado_observacoes">Observações</label>
+        {{ form.associado_observacoes }}
+
+        <label for="id_associado_avatar">Avatar</label>
+        {{ form.associado_avatar }}
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</div>
+
+</body>
+</html>
