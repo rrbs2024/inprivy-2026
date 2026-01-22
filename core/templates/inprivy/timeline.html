@@ -45,6 +45,39 @@
                  
         </div>
 
+        <!-- ========================= -->
+        <!-- COMENTÁRIOS -->
+        <!-- ========================= -->
+        <div class="post-comments">
+
+            {% for comentario in post.comentarios.all %}
+                <div class="comment">
+                    <strong>{{ comentario.autor.associado_nome }}</strong>:
+                    {{ comentario.texto }}
+                    <div style="font-size:12px;color:#777;">
+                        {{ comentario.criado_em|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+            {% empty %}
+                <div style="font-size:13px;color:#999;">
+                    Nenhum comentário ainda.
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- FORM DE COMENTAR -->
+        <!-- ========================= -->
+        <form method="POST" action="{% url 'comentar_timeline' post.id %}">
+            {% csrf_token %}
+            <textarea name="texto"
+                      rows="2"
+                      placeholder="Escreva um comentário..."
+                      style="width:100%;margin-top:10px;"></textarea>
+            <button type="submit">Comentar</button>
+        </form>
+
     </div>
     {% empty %}
         <div class="timeline-empty">Nenhuma publicação ainda.</div>

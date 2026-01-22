@@ -259,7 +259,7 @@ class TimelinePost(models.Model):
     associado = models.ForeignKey(
         Associado,
         on_delete=models.CASCADE,
-        related_name='posts'
+        related_name='timeline_posts'
     )
 
     texto = models.TextField()
@@ -333,3 +333,27 @@ class ForumResposta(models.Model):
     conteudo = models.TextField()
     criada_em = models.DateTimeField(auto_now_add=True)
     ativa = models.BooleanField(default=True)
+    
+#=============================================================================================================
+# CLASSE MODEL - COMENTÁRIOS TIMELINE
+#=============================================================================================================
+class TimelineComentario(models.Model):
+    post = models.ForeignKey(
+        TimelinePost,
+        on_delete=models.CASCADE,
+        related_name='comentarios'
+    )
+    autor = models.ForeignKey(
+        Associado,
+        on_delete=models.CASCADE
+    )
+    texto = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['criado_em']
+
+    def __str__(self):
+        return f'Comentário de {self.autor} no post {self.post.id}'
+

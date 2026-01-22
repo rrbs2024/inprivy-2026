@@ -92,7 +92,9 @@ urlpatterns = [
     path('topico/<int:topico_id>/', views_public.forum_topico, name='forum_topico'),
     path('topico/<int:topico_id>/responder/', views_public.forum_responder, name='forum_responder'),
 
+    path('fotolog/', views_public.fotolog, name='fotolog'),
 
+    path('timeline/comentar/<int:post_id>/', views_public.comentar_timeline, name='comentar_timeline'),
            
 ]
 

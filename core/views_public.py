@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 
 from core.decorators import trial_5_minutos
-from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta
+from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta, TimelineComentario
+
 from .forms import AssociadoForm, TimelinePostForm, MeuPerfilForm
 
 
@@ -116,7 +117,7 @@ class LoginCustomView(LoginView):
         return self.render_to_response(self.get_context_data(form=form))
 
 # =====================================================================================================================
-# VIEW PUBLIC -LOGOUT
+# VIEW PUBLIC - LOGOUT
 # =====================================================================================================================
 
 def sair_view(request):
@@ -132,26 +133,22 @@ def timeline(request):
     posts = TimelinePost.objects.filter(ativo=True)
     return render(request, 'inprivy/timeline.html', {'posts': posts})
 
-# =====================================================================================================================
-# VIEW PUBLIC - TIMELINE - POSTAGEM
-# =====================================================================================================================
-
 @login_required
 def postar_timeline(request):
-    # Pega o associado pelo user logado
     associado = get_object_or_404(Associado, usuarioadm=request.user)
-    
+
     if request.method == 'POST':
-        # Passa também request.FILES para receber imagem e vídeo
         form = TimelinePostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.associado = associado  # vincula ao associado
-            post.save()
-            return redirect('timeline')  # redireciona pra timeline
+            # salva na timeline (post oficial)
+            post_timeline = form.save(commit=False)
+            post_timeline.associado = associado
+            post_timeline.save()
+
+            return redirect('timeline')
     else:
         form = TimelinePostForm()
-    
+
     return render(request, 'inprivy/postar_timeline.html', {'form': form})
 
 # =====================================================================================================================
@@ -243,3 +240,39 @@ def forum_responder(request, topico_id):
             conteudo=conteudo
         )
     return redirect('forum_topico', topico_id=topico.id)
+
+# =====================================================================================================================
+# VIEW PUBLIC - FOTOLOG
+# =====================================================================================================================
+
+@login_required
+def fotolog(request):
+    associado = get_object_or_404(Associado, usuarioadm=request.user)
+    postagens = TimelinePost.objects.filter(
+        associado=associado,
+        ativo=True
+    ).order_by('-criado_em')
+
+    return render(request, 'inprivy/fotolog.html', {
+        'postagens': postagens
+    })
+
+# =====================================================================================================================
+# VIEW PUBLIC - COMENTAR TIMELINE
+# =====================================================================================================================
+
+@login_required
+def comentar_timeline(request, post_id):
+    post = get_object_or_404(TimelinePost, id=post_id, ativo=True)
+    associado = get_object_or_404(Associado, usuarioadm=request.user)
+
+    if request.method == 'POST':
+        texto = request.POST.get('texto')
+        if texto:
+            TimelineComentario.objects.create(
+                post=post,
+                autor=associado,
+                texto=texto
+            )
+
+    return redirect('timeline')

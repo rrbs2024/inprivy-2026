@@ -1,0 +1,71 @@
+<!-- fotolog.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Fotolog - Inprivy</title>
+    <link rel="stylesheet" href="{% static 'css/fotolog.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header-fotolog">
+            <h1>Meu Fotolog</h1>
+            <p class="info">
+                Aqui estão suas fotos e vídeos, frango exibido 🐔
+            </p>
+        </header>
+
+        <section class="fotolog-postagens">
+            {% if postagens %}
+                <div class="cards">
+                    {% for post in postagens %}
+                        <div class="card">
+                            {% if post.imagem %}
+                                <img src="{{ post.imagem.url }}" alt="Foto do fotolog" class="fotolog-imagem">
+                            {% endif %}
+
+                            {% if post.video %}
+                                <video controls class="fotolog-video">
+                                    <source src="{{ post.video.url }}">
+                                </video>
+                            {% endif %}
+
+                            {% if post.legenda %}
+                                <p>{{ post.legenda }}</p>
+                            {% endif %}
+
+                            <p class="info">
+                                Postado em {{ post.criado_em|date:"d/m/Y H:i" }}
+                            </p>
+
+                            <!-- ========================= -->
+                            <!-- COMENTÁRIOS (SÓ LEITURA) -->
+                            <!-- ========================= -->
+                            <div class="post-comments">
+                                {% for comentario in post.comentarios.all %}
+                                    <div class="comment">
+                                        <strong>{{ comentario.autor.associado_nome }}</strong>:
+                                        {{ comentario.texto }}
+                                        <div style="font-size:12px;color:#777;">
+                                            {{ comentario.criado_em|date:"d/m/Y H:i" }}
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <div style="font-size:13px;color:#999;">
+                                        Nenhum comentário ainda.
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="nenhum">
+                    Tu ainda não postou nada, sua galinha tímida.
+                </p>
+            {% endif %}
+        </section>
+        <button type="button" onclick="history.back()">Retornar</butt
