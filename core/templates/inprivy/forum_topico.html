@@ -1,0 +1,49 @@
+<!-- forum_topico.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ topico.titulo }} - Fórum Inprivy</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header-forum">
+            <h1>{{ topico.titulo }}</h1>
+            <p class="info">Autor: {{ topico.autor.associado_nome }} | Criado em: {{ topico.criado_em|date:"d/m/Y H:i" }}</p>
+            <p>{{ topico.conteudo }}</p>
+        </header>
+        <!-- Botão de voltar para categoria -->
+        <a href="{% url 'forum_categoria' topico.categoria.id %}" class="btn-voltar" style="display:inline-block;padding:8px 15px;background:#4A90E2;color:#fff;border-radius:8px;text-decoration:none;margin-bottom:15px;">
+            ← Voltar para {{ topico.categoria.nome }}
+        </a>
+
+        <section class="respostas">
+            <h2>Respostas</h2>
+            {% if respostas %}
+                <div class="cards">
+                    {% for resposta in respostas %}
+                    <div class="card">
+                        <p>{{ resposta.conteudo }}</p>
+                        <p class="info">Autor: {{ resposta.autor.associado_nome }} | Criada em: {{ resposta.criada_em|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="nenhum">Nenhuma resposta ainda. Seja o primeiro a responder!</p>
+            {% endif %}
+        </section>
+
+        <section class="novo-resposta" style="margin-top:30px;">
+            <h2>Responder</h2>
+            <form action="{% url 'forum_responder' topico.id %}" method="POST">
+                {% csrf_token %}
+                <textarea name="conteudo" rows="4" placeholder="Escreva sua resposta aqui..." required style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;"></textarea>
+                <button type="submit" class="btn-novo-topico" style="margin-top:10px;">Enviar Resposta</button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

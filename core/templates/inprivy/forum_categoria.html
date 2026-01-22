@@ -1,0 +1,48 @@
+<!-- forum_categoria.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ categoria.nome }} - Fórum Inprivy</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header-forum">
+            <h1>{{ categoria.nome }}</h1>
+            {% if categoria.descricao %}
+                <p>{{ categoria.descricao }}</p>
+            {% else %}
+                <p>Explore os tópicos dessa categoria.</p>
+            {% endif %}
+        </header>
+        <!-- Botão de voltar para forum home -->
+        <a href="{% url 'forum_home' %}" class="btn-voltar" style="display:inline-block;padding:8px 15px;background:#4A90E2;color:#fff;border-radius:8px;text-decoration:none;margin-bottom:15px;">
+         ← Voltar para Fórum
+        </a>
+
+        <section class="categorias">
+            {% if topicos %}
+            <div class="cards">
+                {% for topico in topicos %}
+                <div class="card">
+                    <h2><a href="{% url 'forum_topico' topico.id %}">{{ topico.titulo }}</a></h2>
+                    <p class="descricao">{{ topico.conteudo|truncatewords:20 }}</p>
+                    <span class="ver-mais">Ver respostas →</span>
+                    <p class="info">Autor: {{ topico.autor.associado_nome }} | Criado em: {{ topico.criado_em|date:"d/m/Y H:i" }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p class="nenhum">Nenhum tópico disponível nesta categoria.</p>
+            {% endif %}
+        </section>
+
+        <footer style="margin-top:30px;">
+            <a href="{% url 'forum_novo_topico' categoria.id %}" class="btn-novo-topico">Criar Novo Tópico</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum - Inprivy</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header-forum">
+            <h1>Fórum Inprivy</h1>
+            <p>Bem-vindo ao fórum, explore as categorias abaixo!</p>
+        </header>
+
+        <section class="categorias">
+            {% if categorias %}
+            <div class="cards">
+                {% for categoria in categorias %}
+                <div class="card">
+                    <h2><a href="{% url 'forum_categoria' categoria.id %}">{{ categoria.nome }}</a></h2>
+                    {% if categoria.descricao %}
+                        <p class="descricao">{{ categoria.descricao }}</p>
+                    {% endif %}
+                    <span class="ver-mais">Ver tópicos →</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p class="nenhum">Nenhuma categoria disponível.</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>

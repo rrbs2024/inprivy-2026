@@ -60,10 +60,10 @@
         </div>
     </header>
 
-    <!-- LINHAS VERTICAIS -->
+    <!-- LINHAS VERTICAIS 
     <div class="left-line"></div>
     <div class="right-line"></div>
-
+-->
     <!-- CONTEÚDO -->
     <main class="container">
 
@@ -77,43 +77,86 @@
 
         <!-- AÇÕES / MENU -->
         <section class="actions">
-            <a href="{% url 'meu_perfil' %}" class="card action-card">Perfil</a>
-            <a href="{% url 'postar_timeline' %}" class="card action-card">Postagem</a>
-            <a href="/timeline/" class="card action-card">Timeline</a>
-            <a href="/agenda/" class="card action-card">Agenda</a>
-            <a href="/eventos/" class="card action-card">Eventos</a>
-            <a href="/mensagens/" class="card action-card">Mensagens</a>
-            <a href="/conteudos/" class="card action-card">Conteúdos</a>
-            <a href="/amigos/" class="card action-card">Amigos</a>
-            <a href="/grupos/" class="card action-card">Grupos</a>
-            <a href="/forum/" class="card action-card">Forum</a>
-            <a href="/chat/" class="card action-card">Chat</a>
-            <a href="/fotolog/" class="card action-card">FotoLog</a>
-            <a href="/assinatura/" class="card action-card">Assinatura</a>
-            <a href="/configuracoes/" class="card action-card">Configuração</a>
+            <a href="{% url 'meu_perfil' %}" class="card action-card">
+                <span class="card-icon">👤</span>
+                <span class="card-text">Perfil</span>
+            </a>
+            <a href="{% url 'postar_timeline' %}" class="card action-card">
+                <span class="card-icon">✍️</span>
+                <span class="card-text">Postagem</span>
+            </a>
+            <a href="/timeline/" class="card action-card">
+                <span class="card-icon">📰</span>
+                <span class="card-text">Timeline</span>
+            </a>
+            <a href="/agenda/" class="card action-card">
+                <span class="card-icon">📅</span>
+                <span class="card-text">Agenda</span>
+            </a>
+            <a href="/eventos/" class="card action-card">
+                <span class="card-icon">🎉</span>
+                <span class="card-text">Eventos</span>
+            </a>
+            <a href="/mensagens/" class="card action-card">
+                <span class="card-icon">✉️</span>
+                <span class="card-text">Mensagens</span>
+            </a>
+            <a href="/conteudos/" class="card action-card">
+                <span class="card-icon">📚</span>
+                <span class="card-text">Conteudos</span>
+            </a>   
+            <a href="/amigos/" class="card action-card">
+                <span class="card-icon">👥</span>
+                <span class="card-text">Amigos</span>
+            </a> 
+            <a href="/grupos/" class="card action-card">
+                <span class="card-icon">🧑‍🤝‍🧑</span>
+                <span class="card-text">Grupos</span>
+            </a>             
+            <a href="{% url 'forum_home' %}" class="card action-card">
+                <span class="card-icon">📢</span>
+                <span class="card-text">Forum</span>
+            </a> 
+            <a href="/chat/" class="card action-card">
+                <span class="card-icon">📱</span>
+                <span class="card-text">Chat</span>
+            </a>
+            <a href="/fotolog/" class="card action-card">
+                <span class="card-icon">📸</span>
+                <span class="card-text">Fotolog</span>
+            </a>                         
+            <a href="/assinatura/" class="card action-card">
+                <span class="card-icon">💳</span>
+                <span class="card-text">Assinatura</span>
+            </a>               
+            <a href="/configuracao/" class="card action-card">
+                <span class="card-icon">⚙️</span>
+                <span class="card-text">Configuracao</span>
+            </a>              
         </section>
 
         <!-- FEED -->
         <section class="feed">
             <div class="card feed-card">
-                <h3>Atualização</h3>
+                <span class="spanfeedcard1">Atualização</span>
                 <p>Novo conteúdo disponível para você.</p>
             </div>
 
-            <div class="card feed-card">
-                <h3>Aviso</h3>
+            <div class="card feed-card1">
+                <span class="spanfeedcard2">Avisos</span>
                 <p>Em breve novas funcionalidades.</p>
             </div>
 
-            <div class="card feed-card">
-                <h3>Novidades</h3>
+            <div class="card feed-card2">
+                <span class="spanfeedcard3">Novidades</span>
                 <p>Estamos chegando com força, para oferecer o que tem de melhor, em um site de relacionamento liberal!</p>
             </div>
         </section>
 
     </main>
 
-    <!-- IMAGENS LATERAIS (NÃO BLOQUEIAM CLIQUE) -->
+    
+    <!-- IMAGENS LATERAIS (NÃO BLOQUEIAM CLIQUE) 
     <img src="{% static 'img/ihw.png' %}" class="left-image" alt="Decoração esquerda">
     <img src="{% static 'img/ihw2.png' %}" class="left-image-2" alt="Decoração esquerda">
     <img src="{% static 'img/img-001.png' %}" class="left-image-3" alt="Decoração esquerda">
@@ -123,10 +166,11 @@
     <img src="{% static 'img/ihw2.png' %}" class="right-image-2" alt="Decoração direita">
     <img src="{% static 'img/img-001.png' %}" class="right-image-3" alt="Decoração direita">   
     <img src="{% static 'img/img-002.png' %}" class="right-image-4" alt="Avatar">
+-->
 
     <!-- RODAPÉ -->
     <footer class="footer">
-        INPRIVY - 2026 - © INOVAHOSTWEB - v.0.0.0
+        INPRIVY - 2026 - © INOVAHOSTWEB - v.0.0.0/04
     </footer>
 
     <div class="bottom-bar"></div>

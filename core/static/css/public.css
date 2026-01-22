@@ -58,7 +58,7 @@ body {
 
 /* ================= CONTAINER ================= */
 .container {
-    max-width: 1300px;
+    max-width: 1600px;
     margin: 30px auto;
     padding: 0 20px;
 }
@@ -106,7 +106,7 @@ body {
     font-size: 13px;
     cursor: pointer;
 
-    background: #ffffff;
+    background: #ebecaf;
     border-radius: 14px;
     transition: all 0.25s ease;
 }
@@ -121,6 +121,8 @@ body {
     --primary: #2563eb;
     --secondary: #22c55e;
     --accent: #f59e0b;
+    --accent1: #097945;
+    --accent2: #c52f09;
 }
 
 .action-card:nth-child(1)  { border-left: 6px solid var(--primary); }
@@ -147,10 +149,39 @@ body {
 .feed-card {
     border-top: 4px solid var(--accent);
 }
+.feed-card1 {
+    border-top: 4px solid var(--accent1);
+}
+.feed-card2 {
+    border-top: 4px solid var(--accent2);
+}
 
 .feed-card h3 {
     margin-bottom: 8px;
 }
+
+.spanfeedcard1 {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    color:#180ad4;
+    margin-bottom: 8px;
+}
+.spanfeedcard2 {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    color:#6d0505;
+    margin-bottom: 8px;
+}
+.spanfeedcard3 {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    color:#079140;
+    margin-bottom: 8px;
+}
+
 
 /* ================= FOOTER ================= */
 .footer {
@@ -176,8 +207,8 @@ body {
     z-index: 5;
 }
 
-.left-line  { left: 140px; }
-.right-line { right: 140px; }
+.left-line  { left: 100px; }
+.right-line { right: 100px; }
 
 /* ================= IMAGENS LATERAIS ================= */
 .left-image,
@@ -189,8 +220,8 @@ body {
 .right-image-3,
 .right-image-4 {
     position: fixed;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
     z-index: 10;
@@ -201,10 +232,10 @@ body {
 .left-image-3    { top: 56%; left: 10px; }
 .left-image-4    { top: 77%; left: 10px; }
 
-.right-image     { top: 14%; right: 20px; }
-.right-image-2   { top: 35%; right: 20px; }
-.right-image-3   { top: 56%; right: 20px; }
-.right-image-4   { top: 77%; right: 20px; }
+.right-image     { top: 14%; right: 10px; }
+.right-image-2   { top: 35%; right: 10px; }
+.right-image-3   { top: 56%; right: 10px; }
+.right-image-4   { top: 77%; right: 10px; }
 
 .left-image img,
 .left-image-2 img,
@@ -259,4 +290,14 @@ body {
     background-color: #cff4fc;
     color: #055160;
     border: 1px solid #b6effb;
+}
+
+
+.card-icon {
+    font-size: 18px; /* aumenta/diminui o ícone */
+    margin-bottom: 6px;
+}
+
+.card-text {
+    font-size: 14px;
 }

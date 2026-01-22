@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 
 from core.decorators import trial_5_minutos
-from .models import UserClone, TimelinePost, Associado
+from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta
 from .forms import AssociadoForm, TimelinePostForm, MeuPerfilForm
 
 
@@ -177,3 +177,69 @@ def meu_perfil(request):
         form = MeuPerfilForm(instance=associado)
 
     return render(request, 'inprivy/meu_perfil.html', {'form': form, 'associado': associado})
+
+# =====================================================================================================================
+# VIEW PUBLIC - FORUM
+# =====================================================================================================================
+
+@login_required
+def forum_home(request):
+    categorias = ForumCategoria.objects.all()
+    return render(request, 'inprivy/forum_home.html', {'categorias': categorias})
+
+
+@login_required
+def forum_categoria(request, categoria_id):
+    categoria = get_object_or_404(ForumCategoria, id=categoria_id)
+    topicos = categoria.topicos.filter(ativo=True).order_by('-criado_em')
+    return render(request, 'inprivy/forum_categoria.html', {
+        'categoria': categoria,
+        'topicos': topicos
+    })
+
+
+@login_required
+def forum_novo_topico(request, categoria_id):
+    categoria = get_object_or_404(ForumCategoria, id=categoria_id)
+    associado = get_object_or_404(Associado, user=request.user)
+
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        conteudo = request.POST.get('conteudo')
+
+        ForumTopico.objects.create(
+            categoria=categoria,
+            autor=associado,
+            titulo=titulo,
+            conteudo=conteudo
+        )
+        return redirect('forum_categoria', categoria_id=categoria.id)
+
+    # Ao criar novo tópico, renderiza o formulário da categoria
+    return render(request, 'inprivy/forum_categoria.html', {'categoria': categoria, 'topicos': categoria.topicos.filter(ativo=True)})
+
+
+@login_required
+def forum_topico(request, topico_id):
+    topico = get_object_or_404(ForumTopico, id=topico_id, ativo=True)
+    respostas = topico.respostas.filter(ativa=True).order_by('criada_em')
+    return render(request, 'inprivy/forum_topico.html', {
+        'topico': topico,
+        'respostas': respostas
+    })
+
+
+@login_required
+def forum_responder(request, topico_id):
+    topico = get_object_or_404(ForumTopico, id=topico_id)
+    associado = get_object_or_404(Associado, user=request.user)
+
+    if request.method == 'POST':
+        conteudo = request.POST.get('conteudo')
+
+        ForumResposta.objects.create(
+            topico=topico,
+            autor=associado,
+            conteudo=conteudo
+        )
+    return redirect('forum_topico', topico_id=topico.id)

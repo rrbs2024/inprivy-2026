@@ -1,0 +1,71 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8; /* fundo claro, visível */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+}
+
+header h1 {
+    color: #0d47a1; /* azul forte */
+    font-size: 2.5em;
+    margin-bottom: 5px;
+}
+
+header p {
+    color: #555;
+    font-size: 1.1em;
+    margin-bottom: 40px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #ffffff; /* card branco sobre fundo claro */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    background: #e3f2fd; /* azul clarinho ao passar o mouse */
+}
+
+.card h2 {
+    margin: 0 0 10px;
+    color: #0d47a1;
+    font-size: 1.5em;
+}
+
+.card h2 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card p {
+    color: #444;
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+.card .ver-mais {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0d47a1;
+    font-weight: bold;
+    font-size: 0.95em;
+}

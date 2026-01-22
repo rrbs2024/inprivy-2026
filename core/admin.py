@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import Perfil, UsuarioPerfil, StatusAssociacao, TipoAssociado, TipoPlano, Genero, StatusAssociado
+from .models import Perfil, UsuarioPerfil, StatusAssociacao, TipoAssociado, TipoPlano, Genero, StatusAssociado, ForumCategoria
 
 # Register your models here.
 
@@ -78,6 +78,19 @@ class GeneroAdmin(admin.ModelAdmin):
 @admin.register(StatusAssociado)
 class StatusAssociadoAdmin(admin.ModelAdmin):
     list_display = ('id', 'descricao')
+    list_filter = ()
+    search_fields = ('id', id)
+    
+    def get_queryset(self, request):
+        return (super().get_queryset(request)
+                .annotate(cod_len=Length('id'))
+                .order_by('cod_len','id'))
+
+#===============================================================================================
+
+@admin.register(ForumCategoria)
+class ForumCategoriaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'descricao')
     list_filter = ()
     search_fields = ('id', id)
     

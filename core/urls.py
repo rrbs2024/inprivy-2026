@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views_public, views_admin
 from django.contrib.auth import views as auth_views
 from .views_public import LoginCustomView
@@ -76,9 +76,22 @@ urlpatterns = [
 
     path('timeline/postar/', views_public.postar_timeline, name='postar_timeline'),
 
-
+# =================================
+# ENDPOINT - TIMELINE - MEU PERFIL
+# =================================
 
     path('meu-perfil/', views_public.meu_perfil, name='meu_perfil'),
+
+# =================================
+# ENDPOINT - TIMELINE - FORUM
+# =================================
+
+    path('forum/', views_public.forum_home, name='forum_home'),
+    path('categoria/<int:categoria_id>/', views_public.forum_categoria, name='forum_categoria'),
+    path('categoria/<int:categoria_id>/novo/', views_public.forum_novo_topico, name='forum_novo_topico'),
+    path('topico/<int:topico_id>/', views_public.forum_topico, name='forum_topico'),
+    path('topico/<int:topico_id>/responder/', views_public.forum_responder, name='forum_responder'),
+
 
            
 ]

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 
@@ -248,7 +249,7 @@ class MensagemAssociado(models.Model):
 
     def __str__(self):
         return f"De {self.remetente} para {self.destinatario}"
-    #===========================================================================================================================#
+#===========================================================================================================================#
 
 #=============================================================================================================
 # CLASSE MODEL - TIMELINE 
@@ -283,3 +284,52 @@ class TimelinePost(models.Model):
 
     def __str__(self):
         return f"Post de {self.associado} em {self.criado_em}"
+
+#=============================================================================================================
+# CLASSE MODEL - ADMIN - FORUM CATEGORIA
+#=============================================================================================================
+class ForumCategoria(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField(blank=True)
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nome
+    
+    class Meta:
+        verbose_name = "Categoria de Forum"           # Nome no singular no admin
+        verbose_name_plural = "Categorias de Foruns"  # Nome no plural no admin
+        
+#=============================================================================================================
+# CLASSE MODEL - FORUM TOPICO
+#=============================================================================================================
+
+class ForumTopico(models.Model):
+    categoria = models.ForeignKey(ForumCategoria, on_delete=models.CASCADE, related_name='topicos')
+    autor = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='topicos')
+    titulo = models.CharField(max_length=200)
+    conteudo = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+    ativo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.titulo
+
+#=============================================================================================================
+# CLASSE MODEL - FORUM RESPOSTA
+#=============================================================================================================
+
+class ForumResposta(models.Model):
+    topico = models.ForeignKey(
+        ForumTopico,
+        on_delete=models.CASCADE,
+        related_name='respostas'
+    )
+    autor = models.ForeignKey(
+        Associado,
+        on_delete=models.CASCADE,
+        related_name='respostas'
+    )
+    conteudo = models.TextField()
+    criada_em = models.DateTimeField(auto_now_add=True)
+    ativa = models.BooleanField(default=True)
