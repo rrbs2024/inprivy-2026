@@ -60,6 +60,10 @@
         </div>
     </header>
 
+    <!-- LINHAS VERTICAIS 
+    <div class="left-line"></div>
+    <div class="right-line"></div>
+-->
     <!-- CONTEÚDO -->
     <main class="container">
 
@@ -77,7 +81,7 @@
                 <span class="card-icon">👤</span>
                 <span class="card-text">Perfil</span>
             </a>
-            <a href="{% url 'listar_associado' %}" class="card action-card">
+            <a href="/associados" class="card action-card">
                 <span class="card-icon">👥</span>
                 <span class="card-text">Associados</span>
             </a>
@@ -89,11 +93,11 @@
                 <span class="card-icon">📰</span>
                 <span class="card-text">Timeline</span>
             </a>
-            <a href="{% url 'agenda' %}" class="card action-card">
+            <a href="/agenda/" class="card action-card">
                 <span class="card-icon">📅</span>
                 <span class="card-text">Agenda</span>
             </a>
-            <a href="{% url 'lista_eventos' %}" class="card action-card">
+            <a href="/eventos/" class="card action-card">
                 <span class="card-icon">🎉</span>
                 <span class="card-text">Eventos</span>
             </a>
@@ -105,10 +109,10 @@
                 <span class="card-icon">📚</span>
                 <span class="card-text">Conteudos</span>
             </a>   
-            <a href="{% url 'meus_seguidores_seguindo' request.user.associado.id %}" class="card action-card">
-                <span class="card-icon">👯</span>
+            <a href="/amigos/" class="card action-card">
+                <span class="card-icon">👥</span>
                 <span class="card-text">Amigos</span>
-            </a>
+            </a> 
             <a href="/grupos/" class="card action-card">
                 <span class="card-icon">🧑‍🤝‍🧑</span>
                 <span class="card-text">Grupos</span>
@@ -125,15 +129,6 @@
                 <span class="card-icon">📸</span>
                 <span class="card-text">Fotolog</span>
             </a>                         
-
-            <!-- CRIAR EVENTO SÓ PARA PLANO COMERCIAL -->
-            {% if request.user.associado.tipoplano_id == 4 %}
-                <a href="{% url 'criar_evento' %}" class="card action-card">
-                    <span class="card-icon">🎉</span>
-                    <span class="card-text">Criar Evento</span>
-                </a>
-            {% endif %}
-
             <a href="/assinatura/" class="card action-card">
                 <span class="card-icon">💳</span>
                 <span class="card-text">Assinatura</span>
@@ -164,10 +159,25 @@
 
     </main>
 
+    
+    <!-- IMAGENS LATERAIS (NÃO BLOQUEIAM CLIQUE) 
+    <img src="{% static 'img/ihw.png' %}" class="left-image" alt="Decoração esquerda">
+    <img src="{% static 'img/ihw2.png' %}" class="left-image-2" alt="Decoração esquerda">
+    <img src="{% static 'img/img-001.png' %}" class="left-image-3" alt="Decoração esquerda">
+    <img src="{% static 'img/img-002.png' %}" class="left-image-4" alt="Decoração esquerda">
+    
+    <img src="{% static 'img/ihw.png' %}" class="right-image" alt="Decoração direita">
+    <img src="{% static 'img/ihw2.png' %}" class="right-image-2" alt="Decoração direita">
+    <img src="{% static 'img/img-001.png' %}" class="right-image-3" alt="Decoração direita">   
+    <img src="{% static 'img/img-002.png' %}" class="right-image-4" alt="Avatar">
+-->
+
     <!-- RODAPÉ -->
     <footer class="footer">
         INPRIVY - 2026 - © INOVAHOSTWEB - v.0.0.0/06
     </footer>
+
+    <div class="bottom-bar"></div>
 
 </body>
 </html>

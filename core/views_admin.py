@@ -1,3 +1,4 @@
+#============ SEÇÃO DE IMPORTS =============================================
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import path, include
@@ -22,8 +23,9 @@ from decimal import Decimal
 from django.core.exceptions import PermissionDenied
 from django.db.models.functions import Length
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
-from .models import Perfil, UsuarioPerfil, User, Associado
+from .models import Perfil, User, Associado
 from .forms import  PerfilForm, AssociadoAdminForm
 
 # Create your views here.
@@ -100,7 +102,7 @@ def imprimir_perfil(request):
 #======================================================================================================================
 
 @login_required()
-def listar_associado(request):    
+def listar_associado_admin(request):    
     associados = Associado.objects.order_by ('id')  # filtra por perfil
     return render(request, 'inprivy/associado_listar.html', {'associados': associados})
 
@@ -120,7 +122,7 @@ def adicionar_associado(request):
                 counter += 1
 
             # Criar senha aleatória
-            password = User.objects.make_random_password()
+            password = get_random_string(10) # gera senha aleatória com 10 caracteres
             user = User.objects.create(
                 username=username,
                 email=associado.associado_email,
@@ -133,7 +135,7 @@ def adicionar_associado(request):
             associado.save()
 
             messages.success(request, f'Associado {associado.associado_nome} criado com usuário {username}')
-            return redirect('listar_associado')
+            return redirect('listar_associado_admin')
         else:
             messages.error(request, 'Formulário inválido. Verifique os campos.')
     else:
@@ -173,7 +175,7 @@ def editar_associado(request, id):
 
             associado.save()
             messages.success(request, f'Associado {associado.associado_nome} atualizado com sucesso.')
-            return redirect('listar_associado')
+            return redirect('listar_associado_admin')
     else:
         form = AssociadoAdminForm(instance=associado)
 

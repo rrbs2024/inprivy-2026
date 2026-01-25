@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 # Create your models here.
@@ -39,22 +40,6 @@ class Perfil(models.Model):
 
 #===========================================================================================================================#
 
-# =====================================
-# CLASSE MODEL - ADMIN - USUÁRIO-PERFIL
-# =====================================
-
-class UsuarioPerfil(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-    
-    class Meta:
-        verbose_name = "Usuário x Perfil"           # Nome no singular no admin
-        verbose_name_plural = "Usuários X Perfis"  # Nome no plural no admin
-
-#===========================================================================================================================#
 
 #=============================================================================================================
 # CLASSE MODEL - ADMIN - Status da Associação
@@ -136,19 +121,6 @@ class UserClone(models.Model):
         return self.apelido
 #======================================================================================================================
     
-#======================================================================================================================
-# CLASSE MODEL - ADMIN - STATUS DO ASSOCIADO
-#======================================================================================================================
-class StatusAssociado(models.Model):   
-    descricao = models.CharField(max_length=30)    
-
-    def __str__(self):
-        return self.descricao    
-    class Meta:
-        verbose_name = "Status Associado"           # Nome no singular no admin
-        verbose_name_plural = "Status Associados"  # Nome no plural no admin
-#======================================================================================================================
-
 #=============================================================================================================
 # CLASSE MODEL - ASSOCIADO
 #=============================================================================================================
@@ -167,6 +139,10 @@ class Associado(models.Model):
     associado_avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  
     status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status Associação")
     usuarioadm = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
+
+    @property
+    def ativo(self):
+        return self.status.id if self.status else None  # devolve o ID do status, tipo 3
 
     def __str__(self):
         return self.associado_nome    
@@ -276,11 +252,15 @@ class TimelinePost(models.Model):
         null=True
     )
 
-    criado_em = models.DateTimeField(auto_now_add=True)
-    ativo = models.BooleanField(default=True)
+    criado_em = models.DateTimeField(auto_now_add=True)      
 
     class Meta:
-        ordering = ['-criado_em']
+        ordering = ['-criado_em']   
+   
+    def status_associado(self):
+        # Pegar o valor de ATIVO do associado
+        ativo = self.associado.ativo
+        return ativo
 
     def __str__(self):
         return f"Post de {self.associado} em {self.criado_em}"
@@ -357,3 +337,83 @@ class TimelineComentario(models.Model):
     def __str__(self):
         return f'Comentário de {self.autor} no post {self.post.id}'
 
+#=============================================================================================================
+# CLASSE MODEL - QUEM SEGUE QUEM
+#=============================================================================================================
+class Seguindo(models.Model):
+    seguidor = models.ForeignKey(
+        Associado,
+        related_name='segue',
+        on_delete=models.CASCADE
+    )
+    seguido = models.ForeignKey(
+        Associado,
+        related_name='seguidores',
+        on_delete=models.CASCADE
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('seguidor', 'seguido')
+
+    def __str__(self):
+        return f"{self.seguidor.associado_nome} segue {self.seguido.associado_nome}"
+    
+#=============================================================================================================
+# CLASSE MODEL - EVENTO
+#=============================================================================================================
+
+class Evento(models.Model):
+    titulo = models.CharField(max_length=100)
+    descricao = models.TextField(blank=True, null=True)
+    inicio = models.DateTimeField()
+    fim = models.DateTimeField()
+    local = models.CharField(max_length=100, blank=True, null=True)
+
+    midia = models.FileField(
+        upload_to='eventos/',
+        blank=True,
+        null=True
+    )
+
+    criado_por = models.ForeignKey(
+        'Associado',
+        on_delete=models.PROTECT,
+        related_name='eventos_criados'
+    )
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titulo
+
+    # Apenas associado COMERCIAL pode criar evento
+    def pode_criar(self):
+        return self.criado_por.tipoplano_id == 4
+    
+#=============================================================================================================
+# CLASSE MODEL - PRESENÇA-EVENTO
+#=============================================================================================================
+from django.db import models
+
+
+class PresencaEvento(models.Model):
+    associado = models.ForeignKey(
+        Associado,
+        on_delete=models.CASCADE,
+        related_name='presencas_eventos'
+    )
+
+    evento = models.ForeignKey(
+        Evento,
+        on_delete=models.CASCADE,
+        related_name='presencas'
+    )
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('associado', 'evento')
+
+    def __str__(self):
+        return f'{self.associado} - {self.evento}'

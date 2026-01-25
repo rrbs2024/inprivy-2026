@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from .views_public import LoginCustomView
 from django.conf import settings
 from django.conf.urls.static import static
+from core.views_public import seguir_associado, deixar_de_seguir
 
 
 urlpatterns = [
@@ -58,7 +59,7 @@ urlpatterns = [
     # ASSOCIADO (ADMIN)
     # ======================
     
-    path('associado/', views_admin.listar_associado, name='listar_associado'),
+    path('associado/', views_admin.listar_associado_admin, name='listar_associado_admin'),
     path('associado/adicionar/', views_admin.adicionar_associado, name='adicionar_associado'),
     path('associado/editar/<int:id>/', views_admin.editar_associado, name='editar_associado'),
     path('associado/excluir/<int:id>/', views_admin.excluir_associado, name='excluir_associado'),
@@ -95,6 +96,23 @@ urlpatterns = [
     path('fotolog/', views_public.fotolog, name='fotolog'),
 
     path('timeline/comentar/<int:post_id>/', views_public.comentar_timeline, name='comentar_timeline'),
+
+    path('conteudo/', views_public.conteudo, name='conteudo'),
+
+    path('associados/', views_public.listar_associado, name='listar_associado'),
+
+    path('associados/seguir/<int:associado_id>/', seguir_associado, name='seguir_associado'),
+    path('associados/deixar/<int:associado_id>/', deixar_de_seguir, name='deixar_de_seguir'),
+
+    path('associado/<int:associado_id>/seguidores/', views_public.meus_seguidores_seguindo, name='meus_seguidores_seguindo'),
+
+    path('eventos/criar/', views_public.criar_evento, name='criar_evento'),
+
+    path('eventos/', views_public.lista_eventos, name='lista_eventos'),
+    path('eventos/presenca/<int:evento_id>/', views_public.toggle_presenca, name='toggle_presenca'),
+
+    path('agenda/', views_public.agenda, name='agenda'),
+
            
 ]
 

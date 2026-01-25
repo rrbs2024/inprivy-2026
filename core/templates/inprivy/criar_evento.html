@@ -1,0 +1,110 @@
+<!-- criar_evento.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Criar Evento - INPRIVY</title>
+
+    <link rel="stylesheet" href="{% static 'css/base_public.css' %}">
+    <link rel="stylesheet" href="{% static 'css/eventos.css' %}">
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            font-family: Arial, sans-serif;
+            background:#0f0f0f;
+            color:#fff;
+        }
+
+        .container{
+            max-width:600px;
+            margin:40px auto;
+            background:#151515;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.5);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        label{
+            display:block;
+            margin-top:12px;
+            font-size:14px;
+        }
+
+        input, textarea{
+            width:100%;
+            padding:10px;
+            margin-top:5px;
+            border-radius:5px;
+            border:none;
+            outline:none;
+            background:#222;
+            color:#fff;
+        }
+
+        textarea{
+            resize:vertical;
+            min-height:100px;
+        }
+
+        button{
+            width:100%;
+            margin-top:20px;
+            padding:12px;
+            border:none;
+            border-radius:6px;
+            background:#eebb80;
+            color:#753a10;
+            font-weight:bold;
+            cursor:pointer;
+            transition:0.2s;
+        }
+
+        button:hover{
+            background:#f0cfa0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Criar Evento</h2>
+
+       <form method="post" enctype="multipart/form-data">
+           {% csrf_token %}
+
+           <label>Título</label>
+           <input type="text" name="titulo" required>
+
+           <label>Descrição</label>
+           <textarea name="descricao" required></textarea>
+
+           <label>Data/Hora Início</label>
+           <input type="datetime-local" name="inicio" required>
+
+           <label>Data/Hora Fim</label>
+           <input type="datetime-local" name="fim" required>
+
+           <label>Local</label>
+           <input type="text" name="local">
+
+           <label>Imagem ou Vídeo</label>
+           <input 
+           type="file" 
+           name="midia"
+           accept="image/*,video/*">
+
+           <button type="submit">Publicar Evento</button>
+        </form>
+    </div>
+
+</body>
+</html>

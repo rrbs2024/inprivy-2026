@@ -11,9 +11,9 @@
 <body>
     <div class="container">
         <header class="header-fotolog">
-            <h1>Meu Fotolog</h1>
+            <h1>Fotolog de: </h1>
             <p class="info">
-                Aqui estão suas fotos e vídeos, frango exibido 🐔
+                {{ request.user.associado.associado_nome }}
             </p>
         </header>
 

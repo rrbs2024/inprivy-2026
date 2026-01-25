@@ -85,21 +85,20 @@ body {
 /* ================= AÇÕES ================= */
 .actions {
     display: flex;
-    justify-content: center;  /* centraliza os cards */
+    justify-content: center;
     gap: 10px;
     margin-bottom: 30px;
-    flex-wrap: wrap;           /* permite quebrar linha */
-    padding: 0 10px;           /* espaço nas bordas */
-    box-sizing: border-box;
+    flex-wrap: nowrap;
 }
 
+/* 🔥 ACTION CARD — DEFINIÇÃO ÚNICA */
 .action-card {
-    flex: 1 1 100px;  /* largura mínima 100px, cresce se tiver espaço */
-    max-width: 150px; /* não fica gigante */
-    height: 60px;
+    width: 100%;           /* ocupa todo o espaço disponível */
+    max-width: 700px; 
+    height: 40px;      /* DIMINUI a altura */
 
+    padding: 8px;
     display: flex;
-    flex-direction: column;  /* emoji em cima, texto embaixo */
     align-items: center;
     justify-content: center;
 
@@ -111,20 +110,11 @@ body {
     background: #ebecaf;
     border-radius: 14px;
     transition: all 0.25s ease;
-
-    text-decoration: none;   /* tira o sublinhado do link */
-    color: inherit;           /* mantém cor do texto */
 }
 
 .action-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 18px 40px rgba(0,0,0,0.15);
-}
-
-/* ================= REMOVE SUBLINHADO EM TODOS OS FILHOS ================= */
-.action-card, 
-.action-card * {
-    text-decoration: none !important;
 }
 
 /* ================= CORES DE DESTAQUE ================= */
@@ -151,7 +141,6 @@ body {
 .action-card:nth-child(13) { border-left: 6px solid #034733; }
 .action-card:nth-child(14) { border-left: 6px solid #ac0460; }
 .action-card:nth-child(15) { border-left: 6px solid #ac0460; }
-.action-card:nth-child(16) { border-left: 6px solid #ac0460; }
 
 
 /* ================= FEED ================= */
@@ -200,7 +189,7 @@ body {
 /* ================= FOOTER ================= */
 .footer {
     text-align: center;
-    padding: 8px;
+    padding: 23px;
     font-size: 15px;
     color: #180ad4;
 }
@@ -308,7 +297,7 @@ body {
 
 
 .card-icon {
-    font-size: 24px; /* aumenta o ícone do emoji */
+    font-size: 18px; /* aumenta/diminui o ícone */
     margin-bottom: 6px;
 }
 

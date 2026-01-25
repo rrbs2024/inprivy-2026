@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Agenda - INPRIVY</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .evento {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .evento h3 {
+            margin: 0 0 10px 0;
+            color: #222;
+        }
+
+        .evento p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .evento .data {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .evento .midia {
+            margin: 10px 10px 10px 0;
+            float: left;
+            width: 120px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .evento img,
+        .evento video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .evento form {
+            margin-top: 10px;
+        }
+
+        .btn-desmarcar {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-desmarcar:hover {
+            background-color: #c82333;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            margin-top: 50px;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .data{
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Minha Agenda</h1>
+
+        {% if eventos %}
+            {% for evento in eventos %}
+                <div class="evento">
+                    {% if evento.midia %}
+                        <div class="midia">
+                            {% if ".mp4" in evento.midia.url or ".webm" in evento.midia.url or ".ogg" in evento.midia.url %}
+                                <video controls>
+                                    <source src="{{ evento.midia.url }}">
+                                    Seu navegador não suporta vídeo.
+                                </video>
+                            {% else %}
+                                <img src="{{ evento.midia.url }}" alt="Mídia do evento">
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <h3>{{ evento.titulo }}</h3>
+
+                    {% if evento.descricao %}
+                        <p>{{ evento.descricao }}</p>
+                    {% endif %}
+
+                    <p class="data">
+                        {{ evento.inicio|date:"d/m/Y H:i" }} 
+                        até 
+                        {{ evento.fim|date:"d/m/Y H:i" }}
+                    </p>
+
+                    {% if evento.local %}
+                        <p><strong>Local:</strong> {{ evento.local }}</p>
+                    {% endif %}
+
+                    <!-- BOTÃO SEPARADO SÓ AGENDA -->
+                    <form method="post" action="{% url 'toggle_presenca' evento.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-desmarcar">DESMARCAR</button>
+                    </form>
+
+                    <div class="clear"></div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                Nenhum evento marcado na sua agenda 😢
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

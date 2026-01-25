@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ associado.associado_nome }} - Seguidores e Seguindo</title>
+    <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
+    <style>
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #8b5e09;
+            margin-top: 150px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .associado-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .associado-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e0d9c2;
+        }
+
+        .associado-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .associado-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f5f5dc;
+        }
+
+        .associado-nome {
+            font-weight: 600;
+            font-size: 15px;
+            color: #131212;
+        }
+
+        .btn-seguir {
+            padding: 6px 16px;
+            border-radius: 8px;
+            border: none;
+            background-color: #eebb80;
+            color: rgb(117, 58, 16);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-seguir:hover {
+            opacity: 0.9;
+        }
+
+        .botao-retornar {
+            background-color: #eebb80;
+            color: rgb(117, 58, 16);
+            display: block;
+            padding: 14px 32px;
+            border-radius: 10px;
+            border-color: #131212;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            max-width: 200px;
+            margin: 20px auto 50px;
+            text-align: center;
+        }
+
+        .header-fotolog {
+            display: flex;
+            justify-content: center; /* centraliza horizontalmente */
+            align-items: center;     /* centraliza vertical dentro do header se precisar */
+            position: fixed;         /* fixa no topo da tela */
+            top: 20px;               /* distância do topo da tela */
+            left: 50%;               /* começa no meio da tela */
+            transform: translateX(-50%); /* centraliza exatamente */
+            gap: 10px;               /* espaço entre elementos */
+            z-index: 999;            /* fica por cima de tudo */
+        }
+
+        .header-fotolog .info {
+            display: inline-block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(90deg, #ff7eb3, #ff758c);
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .header-fotolog .info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.3);
+            cursor: default;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header-fotolog">
+        <h1>Amigos de: </h1>
+        <p class="info">
+            {{ request.user.associado.associado_nome }}
+        </p>
+    </header>
+
+<!-- ===================== SEGUINDO ===================== -->
+<div class="section-title">Seguindo</div>
+<div class="associado-list">
+    {% for s in seguindo %}
+        <div class="associado-card">
+            <div class="associado-info">
+                {% if s.seguido.avatar %}
+                    <img src="{{ s.seguido.avatar.url }}" alt="{{ s.seguido.associado_nome }}" class="associado-avatar">
+                {% else %}
+                    <div class="associado-avatar"></div>
+                {% endif %}
+                <div class="associado-nome">{{ s.seguido.associado_nome }}</div>
+            </div>
+            {% if s.seguido != request.user.associado %}
+            <form method="POST" action="{% if s.seguido.id in seguindo_ids %}{% url 'deixar_de_seguir' s.seguido.id %}{% else %}{% url 'seguir_associado' s.seguido.id %}{% endif %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-seguir">
+                    {% if s.seguido.id in seguindo_ids %}
+                        Deixar de seguir
+                    {% else %}
+                        Seguir
+                    {% endif %}
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    {% empty %}
+        <div class="associado-card">Não está seguindo ninguém ainda.</div>
+    {% endfor %}
+</div>
+
+<!-- ===================== SEGUIDORES ===================== -->
+<div class="section-title">Seguidores</div>
+<div class="associado-list">
+    {% for s in seguidores %}
+        <div class="associado-card">
+            <div class="associado-info">
+                {% if s.seguidor.avatar %}
+                    <img src="{{ s.seguidor.avatar.url }}" alt="{{ s.seguidor.associado_nome }}" class="associado-avatar">
+                {% else %}
+                    <div class="associado-avatar"></div>
+                {% endif %}
+                <div class="associado-nome">{{ s.seguidor.associado_nome }}</div>
+            </div>
+            {% if s.seguidor != request.user.associado %}
+            <form method="POST" action="{% if s.seguidor.id in seguindo_ids %}{% url 'deixar_de_seguir' s.seguidor.id %}{% else %}{% url 'seguir_associado' s.seguidor.id %}{% endif %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-seguir">
+                    {% if s.seguidor.id in seguindo_ids %}
+                        Deixar de seguir
+                    {% else %}
+                        Seguir
+                    {% endif %}
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    {% empty %}
+        <div class="associado-card">Não possui seguidores ainda.</div>
+    {% endfor %}
+</div>
+
+<button type="button" class="botao-retornar" onclick="history.back()">Retornar</button>
+
+</body>
+</html>

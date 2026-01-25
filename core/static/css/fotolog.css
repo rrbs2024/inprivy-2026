@@ -55,3 +55,53 @@ body {
     color: #999;
     margin-top: 30px;
 }
+
+        button {
+             background-color: #eebb80;
+             color: rgb(117, 58, 16);
+             display: block;
+             padding: 14px 32px;
+             border-radius: 10px;
+             border-color: #131212;
+             font-weight: bold;
+             font-size: 16px;
+             cursor: pointer;
+
+             position: absolute;  /* faz ele sair do fluxo normal */
+             top: 40px;           /* distância do topo da tela */
+             left: 10%;           /* centraliza horizontal */
+             transform: translateX(-50%);
+             margin: 0;           /* garante que margem não atrapalhe */
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Nome do usuário no fotolog – versão exibida */
+/* Deixa h1 e p na mesma linha */
+.header-fotolog {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* espaço entre o h1 e o nome */
+}
+
+/* Mantém o estilo do nome do usuário */
+.header-fotolog .info {
+    display: inline-block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(90deg, #ff7eb3, #ff758c);
+    padding: 8px 20px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.header-fotolog .info:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.3);
+    cursor: default;
+}

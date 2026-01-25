@@ -1,4 +1,4 @@
-/* ===== TIMELINE.CSS ===== */
+/* ===== CONTEUDO.CSS ===== */
 body {
     font-family: Arial, sans-serif;
     background-color: #ecdfb5; /* bege clarinho geral */
@@ -46,6 +46,13 @@ h2 {
     margin-right: 12px;
 }
 
+.post-avatar img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .post-user {
     font-weight: 600;
     font-size: 15px;
@@ -72,7 +79,25 @@ h2 {
 .post-media img,
 .post-media video {
     width: 100%;
+    max-height: 400px;
     border-radius: 10px;
+    object-fit: cover;
+}
+
+.post-comments {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.post-comments .comment {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #4a3f2b;
+}
+
+.post-comments .comment strong {
+    color: #131212;
 }
 
 .timeline-empty {
@@ -81,42 +106,28 @@ h2 {
     margin-top: 50px;
 }
 
- /* ===== TIMELINE ADICIONAL ===== */
-        .post-avatar img {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+@media (max-width: 768px) {
+    .timeline-container {
+        padding: 0 10px;
+    }
+}
 
-        .post-media img,
-        .post-media video {
-            max-height: 400px;
-            object-fit: cover;
-        }
+button {
+    background-color: #eebb80; /* cor do botão */
+    color: rgb(117, 58, 16);
+    display: block;
+    margin: 40px auto 0;
+    padding: 14px 32px;
+    border-radius: 10px;
+    border-color: #131212;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
 
-        @media (max-width: 768px) {
-            .timeline-container {
-                padding: 0 10px;
-            }
-        }
-
-         button {
-            background-color: #eebb80; /* cor do botão */
-            color:rgb(117, 58, 16);
-            display: block;          /* vira bloco */
-            margin: 40px auto 0;     /* centraliza horizontal e joga pra baixo */
-            padding: 14px 32px;      /* aumenta o tamanho */
-            border-radius: 10px;
-            border-color: #131212;
-            font-weight: bold;
-            font-size: 16px;         /* botão mais “profissa” */
-            cursor: pointer;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
+button:hover {
+    opacity: 0.9;
+}
 
 .botao-retornar {
     background-color: #eebb80;
@@ -136,5 +147,19 @@ h2 {
     margin: 0;           /* garante que margem não atrapalhe */
 }
 
+/* ===== FORM DE COMENTÁRIO ===== */
+form textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-size: 14px;
+}
 
-        
+form button {
+    margin-top: 6px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+}

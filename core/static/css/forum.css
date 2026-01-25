@@ -69,3 +69,19 @@ header p {
     font-weight: bold;
     font-size: 0.95em;
 }
+        button {
+            background-color: #eebb80; /* cor do botão */
+            color:rgb(117, 58, 16);
+            display: block;          /* vira bloco */
+            margin: 40px auto 0;     /* centraliza horizontal e joga pra baixo */
+            padding: 14px 32px;      /* aumenta o tamanho */
+            border-radius: 10px;
+            border-color: #131212;
+            font-weight: bold;
+            font-size: 16px;         /* botão mais “profissa” */
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
