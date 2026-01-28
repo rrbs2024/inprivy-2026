@@ -162,7 +162,7 @@ def editar_associado(request, id):
                     username = f"{base_username}{counter}"
                     counter += 1
 
-                password = User.objects.make_random_password()
+                password = get_random_string(10) # gera senha aleatória com 10 caracteres
                 user = User.objects.create(
                     username=username,
                     email=associado.associado_email,
@@ -202,6 +202,10 @@ def imprimir_associado(request):
 
 @login_required
 def home_admin(request):
-    if not request.user.userclone.is_admin:
-        raise PermissionDenied("Você não é admin, sua safada.")
-    return render(request, 'inprivy/home_admin.html')
+    user = request.user
+
+    # se for admin (id=1) ignora userclone
+    if user.id == 1 or (hasattr(user, 'userclone') and user.userclone.is_admin):
+        return render(request, 'inprivy/home_admin.html')
+
+    raise PermissionDenied("Você não é admin, sua safada.")

@@ -94,8 +94,8 @@ body {
 }
 
 .action-card {
-    flex: 1 1 100px;  /* largura mínima 100px, cresce se tiver espaço */
-    max-width: 150px; /* não fica gigante */
+    flex: 1 1 120px;  /* largura mínima 100px, cresce se tiver espaço */
+    max-width: 140px; /* não fica gigante */
     height: 60px;
 
     display: flex;
@@ -104,8 +104,8 @@ body {
     justify-content: center;
 
     text-align: center;
-    font-weight: 600;
-    font-size: 13px;
+    font-weight: 500;
+    font-size: 12px;
     cursor: pointer;
 
     background: #ebecaf;
@@ -152,6 +152,7 @@ body {
 .action-card:nth-child(14) { border-left: 6px solid #ac0460; }
 .action-card:nth-child(15) { border-left: 6px solid #ac0460; }
 .action-card:nth-child(16) { border-left: 6px solid #ac0460; }
+.action-card:nth-child(17) { border-left: 6px solid #ac0460; }
 
 
 /* ================= FEED ================= */
@@ -200,7 +201,7 @@ body {
 /* ================= FOOTER ================= */
 .footer {
     text-align: center;
-    padding: 8px;
+    padding: 6px;
     font-size: 15px;
     color: #180ad4;
 }

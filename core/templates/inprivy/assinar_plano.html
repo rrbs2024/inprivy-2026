@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Assinatura - Inprivy</title>
+</head>
+<body>
+    <h2>Confirme sua assinatura</h2>
+
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <strong>{{ plano.tipoplano_descricao }}</strong><br>
+        {{ plano.tipoplano_observacoes }}<br>
+        Valor: R$ {{ plano.tipoplano_valor }}<br>
+        Duração: {{ plano.tipoplano_duracao }} dias<br><br>
+
+        <!-- Botão CONFIRMAR ASSINATURA -->
+        <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" {% if assinatura_existente %}disabled{% endif %}>
+                CONFIRMAR ASSINATURA
+            </button>
+        </form>
+
+        <!-- Botão PAGAR aparece só se existir assinatura pendente -->
+        {% if assinatura_existente %}
+        <form action="{% url 'pagar_assinatura' assinatura_existente.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">PAGAR</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'planos' %}">Voltar</a>
+</body>
+</html>

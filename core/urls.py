@@ -4,11 +4,39 @@ from django.contrib.auth import views as auth_views
 from .views_public import LoginCustomView
 from django.conf import settings
 from django.conf.urls.static import static
-from core.views_public import seguir_associado, deixar_de_seguir
 
 
 urlpatterns = [
     
+
+#===========================================================================================================
+# ENDPOINT - PROCESSO INICIAL
+#===========================================================================================================
+        
+    # ======================
+    # PÚBLICO
+    # ======================
+    path('', views_public.iniciar, name='iniciar'),
+   
+    path('pos-login/', views_public.pos_login, name='pos_login'),
+    path('sair/', views_public.sair_view, name='sair'),
+
+    # ======================
+    # USUÁRIO COMUM
+    # ======================
+    path('usercomum/', views_public.home_public, name='home_public'),
+    
+    # ======================
+    # ADMIN INPRIVY (SEU SISTEMA)
+    # ======================
+    path('painel/', views_admin.home_admin, name='home_admin'),
+
+    # ======================
+    # PÁGINAS INICIAIS
+    # ======================
+    path('termos/', views_public.termos, name='termos'),
+    path('register/', views_public.register, name='register'),
+
 
 #======================================================================================================================
 # ENDPOINT - VERIFICA STATUS DO USER NO LOGIN
@@ -24,40 +52,11 @@ urlpatterns = [
     path('perfil/adicionar', views_admin.adicionar_perfil, name='adicionar_perfil'),
     path('perfil/editar/<int:id>', views_admin.editar_perfil, name='editar_perfil'),
     path('perfil/excluir/<int:id>', views_admin.excluir_perfil, name='excluir_perfil'),
-    path('perfil/imprimir', views_admin.imprimir_perfil, name='imprimir_perfil'),
+    path('perfil/imprimir', views_admin.imprimir_perfil, name='imprimir_perfil'),    
 
-    
-#======================================================================================================================
-# ENDPOINT - PROCESSO INICIAL
-#======================================================================================================================
-        
-    # ======================
-    # PÚBLICO
-    # ======================
-    path('', views_public.iniciar, name='iniciar'),
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('pos-login/', views_public.pos_login, name='pos_login'),
-    path('sair/', views_public.sair_view, name='sair'),
-
-    # ======================
-    # USUÁRIO COMUM
-    # ======================
-    path('home/', views_public.home_public, name='home_public'),
-
-    # ======================
-    # ADMIN INPRIVY (SEU SISTEMA)
-    # ======================
-    path('painel/', views_admin.home_admin, name='home_admin'),
-
-    # ======================
-    # PÁGINAS INICIAIS
-    # ======================
-    path('termos/', views_public.termos, name='termos'),
-    path('register/', views_public.register, name='register'),
-
-    # ======================
-    # ASSOCIADO (ADMIN)
-    # ======================
+# ======================
+# ASSOCIADO (ADMIN)
+# ======================
     
     path('associado/', views_admin.listar_associado_admin, name='listar_associado_admin'),
     path('associado/adicionar/', views_admin.adicionar_associado, name='adicionar_associado'),
@@ -65,15 +64,15 @@ urlpatterns = [
     path('associado/excluir/<int:id>/', views_admin.excluir_associado, name='excluir_associado'),
     path('associado/imprimir/', views_admin.imprimir_associado, name='imprimir_associado'),
 
-    # ======================
-    # ENDPOINT - TIMELINE
-    # ======================
+# ======================
+# ENDPOINT - TIMELINE
+# ======================
     
     path('timeline/', views_public.timeline, name='timeline'),
 
-    # =================================
-    # ENDPOINT - TIMELINE - POSTAGEM
-    # =================================
+# =================================
+# ENDPOINT - TIMELINE - POSTAGEM
+# =================================
 
     path('timeline/postar/', views_public.postar_timeline, name='postar_timeline'),
 
@@ -101,8 +100,8 @@ urlpatterns = [
 
     path('associados/', views_public.listar_associado, name='listar_associado'),
 
-    path('associados/seguir/<int:associado_id>/', seguir_associado, name='seguir_associado'),
-    path('associados/deixar/<int:associado_id>/', deixar_de_seguir, name='deixar_de_seguir'),
+    path('seguir/<int:id>/', views_public.seguir_associado, name='seguir'),
+    path('deixar/<int:id>/', views_public.deixar_de_seguir, name='deixar'),
 
     path('associado/<int:associado_id>/seguidores/', views_public.meus_seguidores_seguindo, name='meus_seguidores_seguindo'),
 
@@ -112,6 +111,26 @@ urlpatterns = [
     path('eventos/presenca/<int:evento_id>/', views_public.toggle_presenca, name='toggle_presenca'),
 
     path('agenda/', views_public.agenda, name='agenda'),
+
+    path('grupos/criar/', views_public.criar_grupo, name='criar_grupo'),
+    path('grupos/<int:id>/', views_public.detalhe_grupo, name='detalhe_grupo'),
+    path('grupos/', views_public.listar_grupos, name='listar_grupos'),
+    path('grupos/<int:id>/editar/', views_public.editar_grupo, name='editar_grupo'),
+    path('grupos/<int:id>/excluir/', views_public.excluir_grupo, name='excluir_grupo'),
+
+    path('mensagens/', views_public.inbox_mensagens, name='inbox_mensagens'),
+    path('mensagens/enviar/', views_public.enviar_mensagem, name='enviar_mensagem'),
+    path('mensagens/<int:id>/', views_public.detalhe_mensagem, name='detalhe_mensagem'),
+
+    path('planos/', views_public.planos, name='planos'),
+    path('planos/<int:plano_id>/', views_public.confirmar_plano, name='confirmar_plano'),
+
+    path('pagar_assinatura/<int:assinatura_id>/', views_public.pagar_assinatura, name='pagar_assinatura'),
+
+   
+    
+    
+
 
            
 ]

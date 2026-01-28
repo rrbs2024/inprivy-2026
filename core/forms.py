@@ -118,8 +118,7 @@ class AssociadoForm(forms.ModelForm):
             'associado_nome',
             'associado_email',
             'associado_telefone',
-            'tipoassociado',
-            'tipoplano',
+            'tipoassociado',           
             'associado_observacoes',           
         ]
 
@@ -127,8 +126,7 @@ class AssociadoForm(forms.ModelForm):
             'associado_nome': 'Nome',
             'associado_email': 'E-mail',
             'associado_telefone': 'Telefone',
-            'tipoassociado': 'Tipo de Associado',
-            'tipoplano': 'Plano',
+            'tipoassociado': 'Tipo de Associado',            
             'associado_observacoes': 'Observações',                    
         }
 
@@ -148,9 +146,7 @@ class AssociadoForm(forms.ModelForm):
             'tipoassociado': forms.Select(attrs={
                 'class': 'form-control'
             }),
-            'tipoplano': forms.Select(attrs={
-                'class': 'form-control'
-            }),
+            
             'associado_observacoes': forms.Textarea(attrs={
                 'placeholder': 'Observações (opcional)',
                 'rows': 4,
@@ -262,8 +258,7 @@ class MeuPerfilForm(forms.ModelForm):
             'associado_email',       # email editável
             'tipoassociado',
             'associado_telefone',
-            'associado_uf',
-            'tipoplano',
+            'associado_uf',           
             'associado_observacoes',
             'associado_avatar',
         ]

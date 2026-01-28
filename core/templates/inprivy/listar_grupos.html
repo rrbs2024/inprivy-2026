@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Todos os Grupos - Inprivy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #eebb80;
+            color: rgb(117, 58, 16);
+            padding: 15px;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #754a10;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #f3f3f3;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 3px rgba(0,0,0,0.1);
+        }
+        a.button {
+            background-color: #eebb80;
+            color: rgb(117, 58, 16);
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a.button:hover {
+            background-color: #d49a60;
+        }
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: #754a10;
+        }
+        a.home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #754a10;
+            text-decoration: none;
+        }
+        a.home:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Inprivy</h1>
+    </header>
+    <main>
+        <h2>Todos os Grupos</h2>
+
+        {% if grupos %}
+        <ul>
+            {% for grupo in grupos %}
+            <li>
+                <span>{{ grupo.nome }}</span>
+                <a href="{% url 'detalhe_grupo' grupo.id %}" class="button">Ver Grupo</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p class="empty">Nenhum grupo criado ainda.</p>
+        {% endif %}
+
+        <a href="{% url 'home_public' %}" class="home">Voltar para a Home</a>
+    </main>
+</body>
+</html>

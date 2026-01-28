@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Mensagens - Inprivy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #eebb80;
+            color: rgb(117,58,16);
+            padding: 15px;
+            text-align: center;
+        }
+        main {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #754a10;
+            text-align: center;
+        }
+        .acoes {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .acoes a button {
+            background: #eebb80;
+            color: rgb(117,58,16);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .acoes a button:hover {
+            background: #d49a60;
+        }
+        .conversa {
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+        .conversa:last-child {
+            border-bottom: none;
+        }
+        .mensagem {
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        .de {
+            background: #fff7e6;
+            color: #754a10;
+        }
+        .para {
+            background: #e0f7fa;
+            color: #055;
+        }
+        .remetente {
+            font-weight: bold;
+        }
+        .data {
+            font-size: 0.85em;
+            color: #777;
+        }
+        .responder button {
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .responder button:hover {
+            background: #574fd6;
+        }
+        .nao-lida {
+            color: red;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .vazio {
+            text-align: center;
+            color: #777;
+            margin-top: 20px;
+        }
+        a.voltar {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #754a10;
+            text-decoration: none;
+        }
+        a.voltar:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Inprivy</h1>
+    </header>
+
+    <main>
+        <h2>Minhas Mensagens</h2>
+
+        <!-- BOTÃO NOVA MENSAGEM -->
+        <div class="acoes">
+            <a href="{% url 'enviar_mensagem' %}">
+                <button type="button">➕ Nova Mensagem</button>
+            </a>
+        </div>
+
+        {% if lista_conversas %}
+            {% for item in lista_conversas %}
+                <div class="conversa">
+                    <div class="remetente">
+                        Conversa com {{ item.outro.associado_nome }}
+                        {% if item.nao_lida %}
+                            <span class="nao-lida">● Novo</span>
+                        {% endif %}
+                    </div>
+
+                    {% for msg in item.conversa.mensagens.all %}
+                        <div class="mensagem {% if msg.remetente == request.user.associado %}para{% else %}de{% endif %}">
+                            <div class="data">{{ msg.criado_em|date:"d/m/Y H:i" }}</div>
+                            <div class="texto">{{ msg.mensagem }}</div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="responder">
+                        <a href="{% url 'enviar_mensagem' %}?destinatario_id={{ item.outro.id }}">
+                            <button type="button">Responder</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="vazio">Você ainda não recebeu nenhuma mensagem.</p>
+        {% endif %}
+
+        <a href="{% url 'home_public' %}" class="voltar">Voltar para a Home</a>
+    </main>
+</body>
+</html>

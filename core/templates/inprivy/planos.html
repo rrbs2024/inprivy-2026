@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Planos - Inprivy</title>
+</head>
+<body>
+    <h2>Escolha seu plano</h2>
+
+    {% for plano in planos %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            <strong>{{ plano.tipoplano_descricao }}</strong><br>
+            {{ plano.tipoplano_observacoes }}<br>
+            Valor: R$ {{ plano.tipoplano_valor }}<br>
+            Duração: {{ plano.tipoplano_duracao }} dias<br><br>
+
+            <a href="{% url 'confirmar_plano' plano.id %}">
+                <button>Confirmar</button>
+            </a>
+        </div>
+    {% empty %}
+        <p>Nenhum plano disponível.</p>
+    {% endfor %}
+
+    <a href="{% url 'home_public' %}">Voltar</a>
+</body>
+</html>

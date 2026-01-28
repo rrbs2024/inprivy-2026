@@ -8,28 +8,20 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
+from django.db.models import Q
+from datetime import timedelta
+from django.utils import timezone
 
 from core.decorators import trial_5_minutos
-from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta, TimelineComentario, Seguindo, Evento, PresencaEvento
+from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta, TimelineComentario, Seguindo, Evento, PresencaEvento, Grupo, MensagemAssociado, Conversa, TipoPlano, Assinatura
 
 from .forms import AssociadoForm, TimelinePostForm, MeuPerfilForm
-
-
-# =============================================================================================================
-# VIEW - TEMPO DE DEGUSTAÇÃO PARA USER SEM PLANO ATIVO
-# =============================================================================================================
-@login_required
-@trial_5_minutos
-def home_public(request):
-    return render(request, 'inprivy/base_public.html')
-
 
 # ================================
 # VIEW - PÁGINA INICIAL
 # ================================
 def iniciar(request):
     return render(request, 'inprivy/iniciar.html')
-
 
 # ================================
 # VIEW - TERMOS
@@ -54,6 +46,8 @@ def register(request):
             else:
                 # Salva o associado normalmente
                 associado = form.save(commit=False)
+                associado.associado_uf = 'PE'
+                associado.status_id = 1 # PENDENTE INPRIVY
                 associado.save()
                 return redirect('login')
     else:
@@ -61,81 +55,86 @@ def register(request):
 
     return render(request, 'inprivy/register.html', {'form': form})
 
+# =============================================================================================================
+# VIEW - TEMPO DE DEGUSTAÇÃO PARA USER SEM PLANO ATIVO
+# =============================================================================================================
+@login_required
+@trial_5_minutos  # decorator apenas para status 6 (inadimplente)
+def home_public(request):
+    return render(request, 'inprivy/base_public.html')
+
 # ================================
 # VIEW - PÓS LOGIN
 # ================================
 @login_required
 def pos_login(request):
-    userclone = request.user.userclone
+    user = request.user
 
-    if userclone.is_admin:
+    # admin verdadeiro
+    if user.id == 1:
         return redirect('home_admin')
-    else:
-        return redirect('home_public')
 
+    # todo o resto é usuário comum
+    return redirect('home_public')
 
 # =============================================================================================================
 # VIEW - LOGIN CUSTOMIZADO COM STATUS
 # =============================================================================================================
 class LoginCustomView(LoginView):
     template_name = 'registration/login.html'
+    redirect_authenticated_user = False
 
     def form_valid(self, form):
         user = form.get_user()
-        if not user:
-            messages.error(self.request, 'Usuário ou senha inválidos.')
-            return self.render_to_response(self.get_context_data(form=form))
 
-        userclone = user.userclone  # aqui já podemos acessar seguro
-
-        # 🚫 usuário sem status, exceto admin
-        if userclone.id != 1 and (not userclone.status or userclone.status is None):
-            logout(self.request)
-            messages.error(self.request, 'Usuário sem status definido.')
-            return self.render_to_response(self.get_context_data(form=form))
-
-        # ✅ ATIVO → entra normal
-        if userclone.status.id == 3:
+        # se for admin, ignora userclone e loga normalmente
+        if user.id == 1:
             return super().form_valid(form)
 
-        # 🟡 INADIMPLENTE → entra em degustação
-        if userclone.status.id == 6:
-            self.request.session['mensagem_degustacao'] = (
-                '⚠️ Você está inadimplente, mas pode usar o sistema por 5 minutos para degustação.'
-            )
-            return super().form_valid(form)
+        associado = Associado.objects.get(usuarioadm=user)  # pega o associado do user
+        status_id = associado.status_id
 
-        # 🔒 BLOQUEIOS
-        logout(self.request)
-
-        status_msgs = {
-            1: 'Seu cadastro está pendente da administração INPRIVY.',
-            2: 'Seu plano necessita de 3 (três) indicações para ser ativado.',
-            4: 'Escolha um plano e faça o pagamento.',
+        # 🚫 bloqueados (NUNCA LOGA)
+        bloqueados = {
+            1: 'Seu cadastro está pendente de verificação do Admin.',
+            2: 'Seu plano precisa de 3 indicações.',
             5: 'Seu acesso foi suspenso.',
-            7: 'Sua conta foi excluída.'
+            7: 'Sua conta foi excluída.',
         }
 
-        messages.error(self.request, status_msgs.get(userclone.status.id, 'Seu acesso não está liberado.'))
+        if status_id in bloqueados:
+            messages.error(self.request, bloqueados[status_id])
+            return self.form_invalid(form)
 
-        return self.render_to_response(self.get_context_data(form=form))
+        # ✅ agora SIM pode logar
+        super().form_valid(form)
+
+        # redirecionamentos válidos
+        if status_id == 4:
+            return redirect('planos')
+
+        if status_id in (3, 6):
+            if status_id == 6:
+                self.request.session['mensagem_degustacao'] = (
+                    '⚠️ Você pode usar o sistema por 5 minutos.'
+                )
+            return redirect('home_public')
+
+        # fallback
+        logout(self.request)
+        return redirect('login')
     
-    # chamada quando o form é inválido (login ou senha errados)
-    def form_invalid(self, form):
-        messages.error(self.request, 'Login ou senha incorretos.')
-        return super().form_invalid(form)
-
-# =====================================================================================================================
+# ===============================================================================================================
 # VIEW PUBLIC - LOGOUT
-# =====================================================================================================================
+# ===============================================================================================================
 
 def sair_view(request):
     logout(request)
     return redirect('iniciar')
 
-# =====================================================================================================================
+# ===============================================================================================================
 # VIEW PUBLIC - TIMELINE
-# =====================================================================================================================
+# ===============================================================================================================
 
 @login_required
 def timeline(request):
@@ -149,9 +148,9 @@ def timeline(request):
 
     return render(request, 'inprivy/timeline.html', {'posts': posts})
 
-# =====================================================================================================================
+# ===============================================================================================================
 # VIEW PUBLIC - POSTAR TIMELINE
-# =====================================================================================================================
+# ===============================================================================================================
 
 @login_required
 def postar_timeline(request):
@@ -195,9 +194,9 @@ def meu_perfil(request):
 
     return render(request, 'inprivy/meu_perfil.html', {'form': form, 'associado': associado})
 
-# =====================================================================================================================
+# ===============================================================================================================
 # VIEW PUBLIC - FORUM
-# =====================================================================================================================
+# =============================================================================================================
 
 @login_required
 def forum_home(request):
@@ -477,4 +476,344 @@ def agenda(request):
 
     return render(request, 'inprivy/agenda.html', {
         'eventos': eventos
+    })
+
+# =======================================================================================
+# VIEW PUBLIC - CRIAR GRUPOS
+# =======================================================================================
+
+@login_required
+def criar_grupo(request):
+    associado = request.user.associado  # pegando o associado logado
+    if associado.ativo != 3:  # só ativos podem criar grupo
+        messages.error(request, "Somente associados ativos podem criar grupos.")
+        return redirect('base_public')
+
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        descricao = request.POST.get('descricao', '')
+
+        if nome.strip() == '':
+            messages.error(request, "O nome do grupo é obrigatório.")
+            return redirect('criar_grupo')
+
+        grupo = Grupo.objects.create(
+            nome=nome,
+            descricao=descricao,
+            criador=associado
+        )
+        grupo.membros.add(associado)  # o criador já entra automaticamente no grupo
+        messages.success(request, f"Grupo '{nome}' criado com sucesso!")
+        return redirect('detalhe_grupo', id=grupo.id)
+
+    return render(request, 'inprivy/criar_grupo.html')
+
+# =======================================================================================
+# VIEW PUBLIC - DETALHE GRUPO
+# =======================================================================================
+
+@login_required
+def detalhe_grupo(request, id):
+    grupo = get_object_or_404(Grupo, id=id)
+    associado = request.user.associado
+
+    # Verifica se o associado já está no grupo
+    esta_no_grupo = grupo.membros.filter(id=associado.id).exists()
+
+    if request.method == 'POST':
+        acao = request.POST.get('acao')
+        if acao == 'entrar':
+            grupo.membros.add(associado)
+            messages.success(request, "Você entrou no grupo!")
+            return redirect('detalhe_grupo', id=grupo.id)
+        elif acao == 'sair':
+            grupo.membros.remove(associado)
+            messages.success(request, "Você saiu do grupo!")
+            return redirect('detalhe_grupo', id=grupo.id)
+
+    context = {
+        'grupo': grupo,
+        'esta_no_grupo': esta_no_grupo
+    }
+    return render(request, 'inprivy/detalhe_grupo.html', context)
+
+# =======================================================================================
+# VIEW PUBLIC - LISTAR GRUPOS
+# =======================================================================================
+
+@login_required
+def listar_grupos(request):
+    grupos = Grupo.objects.all()  # pega todos os grupos do sistema
+
+    context = {
+        'grupos': grupos
+    }
+    return render(request, 'inprivy/listar_grupos.html', context)
+
+# =======================================================================================
+# VIEW PUBLIC - EDITAR GRUPO
+# =======================================================================================
+
+@login_required
+def editar_grupo(request, id):
+    grupo = get_object_or_404(Grupo, id=id)
+
+    # Só o criador pode editar
+    if grupo.criador != request.user.associado:
+        messages.error(request, "Somente o criador do grupo pode editar.")
+        return redirect('detalhe_grupo', id=grupo.id)
+
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        descricao = request.POST.get('descricao')
+        grupo.nome = nome
+        grupo.descricao = descricao
+        grupo.save()
+        messages.success(request, "Grupo atualizado com sucesso!")
+        return redirect('detalhe_grupo', id=grupo.id)
+
+    context = {'grupo': grupo}
+    return render(request, 'inprivy/editar_grupo.html', context)
+
+# =======================================================================================
+# VIEW PUBLIC - EXCLUIR GRUPO
+# =======================================================================================
+
+@login_required
+def excluir_grupo(request, id):
+    grupo = get_object_or_404(Grupo, id=id)
+
+    # Só o criador pode excluir
+    if grupo.criador != request.user.associado:
+        messages.error(request, "Somente o criador do grupo pode excluir.")
+        return redirect('detalhe_grupo', id=grupo.id)
+
+    if request.method == 'POST':
+        grupo.delete()
+        messages.success(request, "Grupo excluído com sucesso!")
+        return redirect('listar_grupos')
+
+    context = {'grupo': grupo}
+    return render(request, 'inprivy/excluir_grupo.html', context)
+
+# =======================================================================================
+# VIEW PUBLIC - INBOX(MENSAGEM ASSOCIADO)
+# =======================================================================================
+
+@login_required
+def inbox_mensagens(request):
+    associado = request.user.associado
+
+    # pega todas as conversas em que o associado participa
+    conversas = Conversa.objects.filter(
+        Q(participante1=associado) | Q(participante2=associado)
+    ).order_by('-criada_em')
+
+    lista_conversas = []
+    for conversa in conversas:
+        ultima_mensagem = conversa.mensagens.last()  # pega a última mensagem da conversa
+        # identifica quem é o outro participante
+        outro = conversa.participante1 if conversa.participante2 == associado else conversa.participante2
+        # verifica se há mensagens não lidas enviadas pelo outro
+        nao_lida = conversa.mensagens.filter(remetente=outro, lida=False).exists()
+
+        lista_conversas.append({
+            'conversa': conversa,
+            'ultimo_remetente': ultima_mensagem.remetente if ultima_mensagem else None,
+            'ultima_mensagem': ultima_mensagem.mensagem if ultima_mensagem else '',
+            'outro': outro,
+            'nao_lida': nao_lida
+        })
+
+    return render(request, 'inprivy/inbox_mensagens.html', {'lista_conversas': lista_conversas})
+
+# =======================================================================================
+# VIEW PUBLIC - ENVIAR MENSAGEM
+# =======================================================================================
+
+@login_required
+def enviar_mensagem(request):
+    associado = request.user.associado
+    destinatario_id = request.GET.get('destinatario_id')
+
+    # identifica o destinatário (outro participante)
+    destinatario = None
+    if destinatario_id:
+        destinatario = get_object_or_404(Associado, id=destinatario_id)
+
+    if request.method == 'POST':
+        texto = request.POST.get('mensagem')
+
+        # pega o destinatário do form se existir (apenas como backup)
+        if not destinatario:
+            destinatario = get_object_or_404(Associado, id=request.POST.get('destinatario'))
+
+        # procura conversa existente entre os dois
+        conversa = Conversa.objects.filter(
+            (Q(participante1=associado) & Q(participante2=destinatario)) |
+            (Q(participante1=destinatario) & Q(participante2=associado))
+        ).first()
+
+        # se não existir, cria uma nova conversa
+        if not conversa:
+            conversa = Conversa.objects.create(
+                participante1=associado,
+                participante2=destinatario
+            )
+
+        # cria a mensagem dentro da conversa
+        MensagemAssociado.objects.create(
+            conversa=conversa,
+            remetente=associado,
+            mensagem=texto
+        )
+
+        return redirect('inbox_mensagens')
+
+    return render(
+        request,
+        'inprivy/enviar_mensagem.html',
+        {
+            'associados': Associado.objects.exclude(id=associado.id),
+            'destinatario': destinatario
+        }
+    )
+
+# =======================================================================================
+# VIEW PUBLIC - DETALHE MENSAGEM
+# =======================================================================================
+
+@login_required
+def detalhe_mensagem(request, id):
+    associado = request.user.associado
+
+    mensagem = get_object_or_404(MensagemAssociado, id=id)
+
+    # segurança: só o destinatário pode ver
+    if mensagem.destinatario != associado:
+        return HttpResponseForbidden("Você não tem permissão para ver esta mensagem.")
+
+    # marca como lida
+    if not mensagem.lida:
+        mensagem.lida = True
+        mensagem.save()
+
+    return render(
+        request,
+        'inprivy/detalhe_mensagem.html',
+        {'mensagem': mensagem}
+    )
+
+# =======================================================================================
+# VIEW PUBLIC - LISTAR PLANOS
+# =======================================================================================
+
+@login_required
+def planos(request):
+    associado = request.user.associado
+
+    # Verifica se já existe assinatura pendente
+    assinatura_existente = Assinatura.objects.filter(
+        associado=associado,
+        assinada = False
+    ).first()
+
+    if assinatura_existente and assinatura_existente.plano_confirmado == False:
+        # Já existe assinatura pendente → vai direto para confirmação de assinatura
+        return redirect('confirmar_plano', plano_id=assinatura_existente.tipoplano.id)
+
+    # Caso não exista assinatura → lista todos os planos normalmente
+    
+    planos_disponiveis = TipoPlano.objects.all().order_by('tipoplano_valor')
+    return render(request, 'inprivy/planos.html', {
+    'planos': planos_disponiveis})      
+
+# =======================================================================================
+# VIEW PUBLIC - CONFIRMAR PLANO
+# =======================================================================================
+
+@login_required
+def confirmar_plano(request, plano_id):
+    associado = request.user.associado
+    plano = get_object_or_404(TipoPlano, id=plano_id)
+
+    # Verifica se já existe assinatura pendente para este associado
+    assinatura_existente = Assinatura.objects.filter(
+        associado=associado,
+        plano_confirmado = False
+    ).first()  # pega a primeira, se existir
+
+    if request.method == 'POST':
+        # Só cria uma nova assinatura se não existir nenhuma pendente
+        if not assinatura_existente:
+            Assinatura.objects.create(
+                associado=associado,
+                tipoplano=plano,
+                data_fim=timezone.now().date() + timedelta(days=plano.tipoplano_duracao),
+                ativa=False,
+                pago=False,
+                assinada = False,
+                plano_confirmado = False
+            )
+        return redirect('assinar_plano')
+
+    return render(request, 'inprivy/assinar_plano.html', {
+        'plano': plano,
+        'assinatura_existente': assinatura_existente
+    })
+
+# =======================================================================================
+# VIEW PUBLIC - ASSINAR PLANO
+# =======================================================================================
+
+@login_required
+def assinar_plano(request, plano_id):
+    associado = request.user.associado
+    plano = get_object_or_404(TipoPlano, id=plano_id)
+
+    # Verifica se já existe assinatura pendente para este associado
+    assinatura_existente = Assinatura.objects.filter(
+        associado=associado,
+        plano_confirmado = True
+    ).first()  # pega a primeira, se existir
+
+    if request.method == 'POST':
+        # Só cria uma nova assinatura se não existir nenhuma pendente
+        if not assinatura_existente:
+            Assinatura.objects.create(
+                associado=associado,
+                tipoplano=plano,
+                data_fim=timezone.now().date() + timedelta(days=plano.tipoplano_duracao),
+                ativa=False,
+                pago=False,
+                assinada = False,
+                plano_confirmado = False
+            )
+        return redirect('assinar_plano')
+
+    return render(request, 'inprivy/assinar_plano.html', {
+        'plano': plano,
+        'assinatura_existente': assinatura_existente
+    })
+
+# =======================================================================================
+# VIEW PUBLIC - PAGAR ASSINATURA
+# =======================================================================================
+
+@login_required
+def pagar_assinatura(request, assinatura_id):
+    assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
+
+    if request.method == 'POST':
+        # Simula pagamento
+        assinatura.pago = True
+        assinatura.save()
+
+        # Aqui ainda não muda status.id do usuário
+        return render(request, 'inprivy/pagar_assinatura_sucesso.html', {
+            'assinatura': assinatura
+        })
+
+    return render(request, 'inprivy/pagar_assinatura.html', {
+        'assinatura': assinatura
     })

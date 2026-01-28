@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagamento Concluído - Inprivy</title>
+</head>
+<body>
+    <h2>Pagamento concluído!</h2>
+
+    <p>Você pagou o plano <strong>{{ assinatura.tipoplano.tipoplano_descricao }}</strong>.</p>
+    <p>Valor: R$ {{ assinatura.tipoplano.tipoplano_valor }}</p>
+    <p>Duração: {{ assinatura.tipoplano.tipoplano_duracao }} dias</p>
+
+    <a href="{% url 'home_public' %}">Ir para a tela inicial</a>
+</body>
+</html>

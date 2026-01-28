@@ -144,7 +144,7 @@
               <th style="width: 200px; font-size: 13px;">Data Cadastro</th>
               <th style="width: 500px; font-size: 13px;">Observações</th> 
               <th style="width: 300px; font-size: 13px;">Status Associação</th> 
-              <th style="width: 200px; font-size: 13px;">Usuário Responsável</th>
+              
               <th>Ações</th>
             </tr>
         </thead>
@@ -161,7 +161,7 @@
                 <td style="width: 200px; font-size: 13px;">{{ tipo.associado_datacadastro }}</td>     
                 <td style="width: 500px; font-size: 13px;">{{ tipo.associado_observacoes }}</td>
                 <td class="codigo-destaque">{{ tipo.status }}</td>                 
-                <td style="width: 200px; font-size: 13px;">{{ tipo.usuarioadm }}</td>  
+                
                 <td style="display: flex; flex-direction: column; gap: 4px;">
                     <a href="{% url 'editar_associado' tipo.id %}" class="btn">✏️ Editar</a>
                     <a href="{% url 'excluir_associado' tipo.id %}" class="btn" onclick="return confirm('Tem certeza que deseja excluir este Associado?');">🗑️ Excluir</a>

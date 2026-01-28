@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Criar Grupo - Inprivy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #eebb80;
+            color: rgb(117, 58, 16);
+            padding: 15px;
+            text-align: center;
+        }
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #754a10;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #eebb80;
+            color: rgb(117, 58, 16);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #d49a60;
+        }
+        .messages {
+            margin-bottom: 15px;
+        }
+        .messages p {
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #754a10;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Inprivy</h1>
+    </header>
+    <main>
+        <h2>Criar Novo Grupo</h2>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="nome">Nome do Grupo:</label>
+            <input type="text" name="nome" id="nome" required>
+
+            <label for="descricao">Descrição:</label>
+            <textarea name="descricao" id="descricao" rows="4"></textarea>
+
+            <button type="submit">Criar Grupo</button>
+        </form>
+        <!-- Link de voltar para a home, opcional -->
+        <a href="{% url 'home_public' %}">Voltar para a Home</a>
+        
+    </main>
+</body>
+</html>

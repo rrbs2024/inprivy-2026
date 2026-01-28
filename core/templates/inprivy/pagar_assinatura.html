@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagar Assinatura - Inprivy</title>
+</head>
+<body>
+    <h2>Pagar assinatura</h2>
+
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <strong>Plano:</strong> {{ assinatura.tipoplano.tipoplano_descricao }}<br>
+        Valor: R$ {{ assinatura.tipoplano.tipoplano_valor }}<br>
+        Duração: {{ assinatura.tipoplano.tipoplano_duracao }} dias<br><br>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">PAGAR AGORA (teste)</button>
+        </form>
+    </div>
+
+    <a href="{% url 'home_public' %}">Voltar</a>
+</body>
+</html>

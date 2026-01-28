@@ -40,7 +40,6 @@ class Perfil(models.Model):
 
 #===========================================================================================================================#
 
-
 #=============================================================================================================
 # CLASSE MODEL - ADMIN - Status da Associação
 #=============================================================================================================
@@ -79,6 +78,9 @@ class TipoAssociado(models.Model):
 
 class TipoPlano(models.Model):
     tipoplano_descricao = models.CharField("Descrição", max_length=30)
+    tipoplano_observacoes = models.TextField("Observações", blank=True)
+    tipoplano_valor = models.DecimalField(max_digits=8, decimal_places=2)
+    tipoplano_duracao = models.PositiveIntegerField(default=30)  # validade do plano
     
     def __str__(self):
         return self.tipoplano_descricao 
@@ -113,9 +115,6 @@ class UserClone(models.Model):
     foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
     bio = models.TextField(blank=True)
     is_admin = models.BooleanField(default=False)
-    tri_indica = models.IntegerField(null=True, blank=True)
-    tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Tipo de Plano")
-    status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status da Associação")
 
     def __str__(self):
         return self.apelido
@@ -137,6 +136,7 @@ class Associado(models.Model):
     associado_observacoes = models.TextField("Observações", blank=True, null=True)    
     associado_codigo = models.CharField("Código Interno", max_length=30, blank=True, null=True)  
     associado_avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  
+    tri_indica = models.IntegerField(null=True, blank=True)
     status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status Associação")
     usuarioadm = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -200,31 +200,6 @@ class AssociadoApadrinhado(models.Model):
     def __str__(self):
         return f"{self.padrinho.nome} - Amigo: {self.apadrinhado.nome}"
         
-#===========================================================================================================================#
-
-#=============================================================================================================
-# CLASSE MODEL - MENSAGEM ASSOCIADO 
-#=============================================================================================================
-class MensagemAssociado(models.Model):
-    remetente = models.ForeignKey(
-        Associado,
-        on_delete=models.CASCADE,
-        related_name='mensagens_enviadas'
-    )
-    destinatario = models.ForeignKey(
-        Associado,
-        on_delete=models.CASCADE,
-        related_name='mensagens_recebidas'
-    )
-    mensagem = models.TextField()
-    criado_em = models.DateTimeField(auto_now_add=True)
-    lida = models.BooleanField(default=False)
-
-    class Meta:
-        ordering = ['-criado_em']
-
-    def __str__(self):
-        return f"De {self.remetente} para {self.destinatario}"
 #===========================================================================================================================#
 
 #=============================================================================================================
@@ -394,9 +369,6 @@ class Evento(models.Model):
 #=============================================================================================================
 # CLASSE MODEL - PRESENÇA-EVENTO
 #=============================================================================================================
-from django.db import models
-
-
 class PresencaEvento(models.Model):
     associado = models.ForeignKey(
         Associado,
@@ -417,3 +389,75 @@ class PresencaEvento(models.Model):
 
     def __str__(self):
         return f'{self.associado} - {self.evento}'
+
+#=============================================================================================================
+# CLASSE MODEL - GRUPO
+#=============================================================================================================
+
+class Grupo(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField(blank=True, null=True)
+    criador = models.ForeignKey(
+        'Associado',
+        on_delete=models.CASCADE,
+        related_name='grupos_criados'
+    )
+    membros = models.ManyToManyField(
+        'Associado',
+        related_name='grupos',
+        blank=True
+    )
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nome
+
+#===========================================================================================================================#
+
+#=============================================================================================================
+# CLASSE MODEL - CONVERSA
+#=============================================================================================================
+class Conversa(models.Model):
+    participante1 = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='conversas1')
+    participante2 = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='conversas2')
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('participante1', 'participante2')  # garante uma conversa única entre dois associados
+
+    def __str__(self):
+        return f"Conversa entre {self.participante1} e {self.participante2}"
+    
+#=============================================================================================================
+# CLASSE MODEL - MENSAGEM ASSOCIADO 
+#=============================================================================================================
+class MensagemAssociado(models.Model):
+    conversa = models.ForeignKey(Conversa, on_delete=models.CASCADE, related_name='mensagens')
+    remetente = models.ForeignKey(Associado, on_delete=models.CASCADE, related_name='mensagens_enviadas')
+    mensagem = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+    lida = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['criado_em']
+
+    def __str__(self):
+        return f"De {self.remetente} para {self.conversa}"
+
+#=============================================================================================================
+# CLASSE MODEL - ASSINATURA(PLANOS)
+#=============================================================================================================
+class Assinatura(models.Model):
+    associado = models.ForeignKey(Associado, on_delete=models.CASCADE)
+    tipoplano = models.ForeignKey(TipoPlano, on_delete=models.PROTECT)
+
+    ativa = models.BooleanField(default=False)
+    pago = models.BooleanField(default=False)
+    assinada = models.BooleanField(default=False)
+    plano_confirmado = models.BooleanField(default=False)
+
+    data_inicio = models.DateTimeField(null=True, blank=True)
+    data_fim = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.associado} - {self.tipoplano.tipoplano_descricao}"

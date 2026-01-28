@@ -7,15 +7,18 @@ from .models import UserClone, Associado
 @receiver(post_save, sender=User)
 def criar_userclone(sender, instance, created, **kwargs):
     if created:
+        # ❌ Pula o admin
+        if instance.id == 1:
+            return
+
         try:
             # Pegar o associado relacionado a esse user
             associado = Associado.objects.get(usuarioadm=instance)
 
             UserClone.objects.create(
                 user=instance,
-                apelido=instance.username,
-                tipoplano=associado.tipoplano,
-                status=associado.status
+                apelido=instance.username                         
+               
             )
         except Associado.DoesNotExist:
             # Se não houver associado, cria só com apelido
