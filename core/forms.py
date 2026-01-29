@@ -154,8 +154,7 @@ class AssociadoForm(forms.ModelForm):
             
             }),
         }
-
-        
+       
 
 #=====================================================================================================================
 
@@ -173,6 +172,7 @@ class AssociadoAdminForm(forms.ModelForm):
             'tipoplano',            
             'associado_observacoes',
             'associado_codigo', 
+            'tri_indica',
             'status',          
             
         ]
@@ -184,6 +184,8 @@ class AssociadoAdminForm(forms.ModelForm):
             'associado_telefone': 'Telefone',
             'tipoplano': 'Tipo de Plano',
             'associado_observacoes': 'Observações',
+            'associado_codigo': 'Código do Asasociado',
+            'tri_indica': 'Qtd. Indicações',
             'status': 'Status Associação',
             
         }
@@ -224,9 +226,19 @@ class AssociadoAdminForm(forms.ModelForm):
                 'style': 'width: 100%;',
                 'placeholder': 'Descreva Sobre a Pessoa com Detalhes...',
                 'class': 'form-control',
-                'style': 'width: 100%; padding: 10px; font-size: 13px;',
+                'style': 'width: 100%; padding: 6px; font-size: 13px;',
             }),            
             
+            'associado_codigo': forms.TextInput(attrs={
+                'class': 'form-control',
+                'style': 'width: 100%; padding: 3px; font-size: 13px;',
+            }),
+
+            'tri_indica': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'style': 'width: 100%; padding: 6px; font-size: 14px;',
+            }),
+
             'status': forms.Select(attrs={
                 'class': 'form-control'
             }),                                   

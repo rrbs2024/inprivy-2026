@@ -111,9 +111,7 @@ class Genero(models.Model):
 #======================================================================================================================
 class UserClone(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    apelido = models.CharField(max_length=50)
-    foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
-    bio = models.TextField(blank=True)
+    apelido = models.CharField(max_length=50)    
     is_admin = models.BooleanField(default=False)
 
     def __str__(self):
@@ -139,7 +137,7 @@ class Associado(models.Model):
     tri_indica = models.IntegerField(null=True, blank=True)
     status = models.ForeignKey(StatusAssociacao, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Status Associação")
     usuarioadm = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
-
+   
     @property
     def ativo(self):
         return self.status.id if self.status else None  # devolve o ID do status, tipo 3
@@ -453,8 +451,7 @@ class Assinatura(models.Model):
 
     ativa = models.BooleanField(default=False)
     pago = models.BooleanField(default=False)
-    assinada = models.BooleanField(default=False)
-    plano_confirmado = models.BooleanField(default=False)
+    assinada = models.BooleanField(default=False)   
 
     data_inicio = models.DateTimeField(null=True, blank=True)
     data_fim = models.DateTimeField(null=True, blank=True)

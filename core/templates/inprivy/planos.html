@@ -14,8 +14,8 @@
             Valor: R$ {{ plano.tipoplano_valor }}<br>
             Duração: {{ plano.tipoplano_duracao }} dias<br><br>
 
-            <a href="{% url 'confirmar_plano' plano.id %}">
-                <button>Confirmar</button>
+            <a href="{% url 'assinar_plano' plano.id %}">
+                <button>Assinar</button>
             </a>
         </div>
     {% empty %}

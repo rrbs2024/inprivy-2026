@@ -139,3 +139,9 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# =========================
+# Configurações Mercado Pago
+# =========================
+MERCADOPAGO_ACCESS_TOKEN = "APP_USR-2875420800183100-101508-25f218bca852b111791d174003935fdb-373794284"
+

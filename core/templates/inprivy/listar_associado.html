@@ -72,7 +72,7 @@
         </div>
         
         <!-- botão seguir/deixar de seguir -->
-        <form method="POST" action="{% if associado.id in seguindo_ids %}{% url 'deixar_de_seguir' associado.id %}{% else %}{% url 'seguir_associado' associado.id %}{% endif %}">
+        <form method="POST" action="{% if associado.id in seguindo_ids %}{% url 'deixar' associado.id %}{% else %}{% url 'seguir' associado.id %}{% endif %}">
             {% csrf_token %}
             <button type="submit" class="btn-seguir">
                 {% if associado.id in seguindo_ids %}

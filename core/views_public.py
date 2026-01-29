@@ -11,6 +11,8 @@ from django.http import HttpResponseForbidden
 from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
+import mercadopago
+from django.conf import settings
 
 from core.decorators import trial_5_minutos
 from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta, TimelineComentario, Seguindo, Evento, PresencaEvento, Grupo, MensagemAssociado, Conversa, TipoPlano, Assinatura
@@ -226,7 +228,7 @@ def forum_categoria(request, categoria_id):
 @login_required
 def forum_novo_topico(request, categoria_id):
     categoria = get_object_or_404(ForumCategoria, id=categoria_id)
-    associado = get_object_or_404(Associado, user=request.user)
+    associado = get_object_or_404(Associado, usuarioadm=request.user)
 
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
@@ -241,13 +243,15 @@ def forum_novo_topico(request, categoria_id):
         return redirect('forum_categoria', categoria_id=categoria.id)
 
     # Ao criar novo tópico, renderiza o formulário da categoria
-    return render(request, 'inprivy/forum_categoria.html', {'categoria': categoria, 'topicos': categoria.topicos.filter(ativo=True)})
+    return render(request, 'inprivy/forum_novo_topico.html', {
+    'categoria': categoria
+})
 
 
 @login_required
 def forum_topico(request, topico_id):
     topico = get_object_or_404(ForumTopico, id=topico_id, ativo=True)
-    respostas = topico.respostas.filter(ativo=3).order_by('criada_em')
+    respostas = topico.respostas.filter(ativa=True).order_by('criada_em')
     return render(request, 'inprivy/forum_topico.html', {
         'topico': topico,
         'respostas': respostas
@@ -257,7 +261,7 @@ def forum_topico(request, topico_id):
 @login_required
 def forum_responder(request, topico_id):
     topico = get_object_or_404(ForumTopico, id=topico_id)
-    associado = get_object_or_404(Associado, user=request.user)
+    associado = get_object_or_404(Associado, usuarioadm=request.user)
 
     if request.method == 'POST':
         conteudo = request.POST.get('conteudo')
@@ -268,6 +272,22 @@ def forum_responder(request, topico_id):
             conteudo=conteudo
         )
     return redirect('forum_topico', topico_id=topico.id)
+
+
+@login_required
+def forum_editar_topico(request, topico_id):
+    topico = get_object_or_404(ForumTopico, id=topico_id, autor__usuarioadm=request.user)
+
+    if request.method == 'POST':
+        topico.titulo = request.POST.get('titulo')
+        topico.conteudo = request.POST.get('conteudo')
+        topico.save()
+        return redirect('forum_topico', topico_id=topico.id)
+
+    return render(request, 'inprivy/forum_editar_topico.html', {
+        'topico': topico
+    })
+
 
 # =====================================================================================================================
 # VIEW PUBLIC - FOTOLOG
@@ -718,49 +738,19 @@ def planos(request):
         assinada = False
     ).first()
 
-    if assinatura_existente and assinatura_existente.plano_confirmado == False:
-        # Já existe assinatura pendente → vai direto para confirmação de assinatura
-        return redirect('confirmar_plano', plano_id=assinatura_existente.tipoplano.id)
+    if assinatura_existente and assinatura_existente.assinada == False:
+        # Já existe assinatura pendente → vai direto para assinar plano
+        return redirect('assinar_plano', plano_id=assinatura_existente.tipoplano.id)
+    
+    if assinatura_existente and assinatura_existente.assinada == True:
+        # Já existe assinatura concluída → vai direto para pagar assinatura
+        return redirect('pagar_assinatura', plano_id=assinatura_existente.tipoplano.id)        
 
     # Caso não exista assinatura → lista todos os planos normalmente
     
     planos_disponiveis = TipoPlano.objects.all().order_by('tipoplano_valor')
     return render(request, 'inprivy/planos.html', {
     'planos': planos_disponiveis})      
-
-# =======================================================================================
-# VIEW PUBLIC - CONFIRMAR PLANO
-# =======================================================================================
-
-@login_required
-def confirmar_plano(request, plano_id):
-    associado = request.user.associado
-    plano = get_object_or_404(TipoPlano, id=plano_id)
-
-    # Verifica se já existe assinatura pendente para este associado
-    assinatura_existente = Assinatura.objects.filter(
-        associado=associado,
-        plano_confirmado = False
-    ).first()  # pega a primeira, se existir
-
-    if request.method == 'POST':
-        # Só cria uma nova assinatura se não existir nenhuma pendente
-        if not assinatura_existente:
-            Assinatura.objects.create(
-                associado=associado,
-                tipoplano=plano,
-                data_fim=timezone.now().date() + timedelta(days=plano.tipoplano_duracao),
-                ativa=False,
-                pago=False,
-                assinada = False,
-                plano_confirmado = False
-            )
-        return redirect('assinar_plano')
-
-    return render(request, 'inprivy/assinar_plano.html', {
-        'plano': plano,
-        'assinatura_existente': assinatura_existente
-    })
 
 # =======================================================================================
 # VIEW PUBLIC - ASSINAR PLANO
@@ -774,23 +764,25 @@ def assinar_plano(request, plano_id):
     # Verifica se já existe assinatura pendente para este associado
     assinatura_existente = Assinatura.objects.filter(
         associado=associado,
-        plano_confirmado = True
+        assinada = True
     ).first()  # pega a primeira, se existir
 
     if request.method == 'POST':
-        # Só cria uma nova assinatura se não existir nenhuma pendente
-        if not assinatura_existente:
-            Assinatura.objects.create(
-                associado=associado,
-                tipoplano=plano,
-                data_fim=timezone.now().date() + timedelta(days=plano.tipoplano_duracao),
-                ativa=False,
-                pago=False,
-                assinada = False,
-                plano_confirmado = False
-            )
-        return redirect('assinar_plano')
-
+        if   assinatura_existente:
+            assinatura_existente.assinada = True
+            assinatura_existente.save()
+            assinatura = assinatura_existente
+        else:
+            assinatura = Assinatura.objects.create(
+            associado=associado,
+            tipoplano=plano,
+            data_fim=timezone.now().date() + timedelta(days=plano.tipoplano_duracao),
+            ativa=False,
+            pago=False,
+            assinada=True
+        )
+        return redirect('pagar_assinatura', assinatura_id=assinatura.id)
+    
     return render(request, 'inprivy/assinar_plano.html', {
         'plano': plano,
         'assinatura_existente': assinatura_existente
@@ -801,13 +793,19 @@ def assinar_plano(request, plano_id):
 # =======================================================================================
 
 @login_required
-def pagar_assinatura(request, assinatura_id):
+def pagar_assinatura_origem(request, assinatura_id):
     assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
 
     if request.method == 'POST':
         # Simula pagamento
         assinatura.pago = True
+        assinatura.ativa = True
         assinatura.save()
+
+        # 👉 muda status do associado
+        associado = assinatura.associado
+        associado.status_id = 3
+        associado.save()
 
         # Aqui ainda não muda status.id do usuário
         return render(request, 'inprivy/pagar_assinatura_sucesso.html', {
@@ -817,3 +815,78 @@ def pagar_assinatura(request, assinatura_id):
     return render(request, 'inprivy/pagar_assinatura.html', {
         'assinatura': assinatura
     })
+
+# =======================================================================================
+# VIEW PUBLIC - MERCADO PAGO
+# =======================================================================================
+
+@login_required
+def pagar_assinatura(request, assinatura_id):
+    assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
+
+    if request.method == 'POST':
+        sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+
+        # Cria preferência de pagamento
+        preference_data = {
+            "items": [
+                {
+                    "title": f"Assinatura {assinatura.tipo.nome}",
+                    "quantity": 1,
+                    "unit_price": float(assinatura.tipo.valor),
+                }
+            ],
+            "back_urls": {
+                "success": request.build_absolute_uri(f"/assinaturas/{assinatura.id}/sucesso/"),
+                "failure": request.build_absolute_uri(f"/assinaturas/{assinatura.id}/falha/"),
+                "pending": request.build_absolute_uri(f"/assinaturas/{assinatura.id}/pendente/"),
+            },
+            "auto_return": "approved"
+        }
+
+        preference_response = sdk.preference().create(preference_data)
+        payment_url = preference_response["response"]["init_point"]
+
+        # Redireciona o usuário para a página de pagamento Mercado Pago
+        return redirect(payment_url)
+
+    return render(request, 'inprivy/pagar_assinatura.html', {
+        'assinatura': assinatura
+    })
+
+#=======================================================================================================
+@login_required
+def assinatura_sucesso(request, assinatura_id):
+    assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
+
+    # Marca pagamento e assinatura como ativa
+    assinatura.pago = True
+    assinatura.ativa = True
+    assinatura.save()
+
+    # Atualiza status do associado
+    associado = assinatura.associado
+    associado.status_id = 3
+    associado.save()
+
+    return render(request, 'inprivy/pagar_assinatura_sucesso.html', {
+        'assinatura': assinatura
+    })
+
+#=======================================================================================================
+@login_required
+def assinatura_falha(request, assinatura_id):
+    assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
+    return render(request, 'inprivy/pagar_assinatura_falha.html', {
+        'assinatura': assinatura
+    })
+
+#=======================================================================================================
+@login_required
+def assinatura_pendente(request, assinatura_id):
+    assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
+    return render(request, 'inprivy/pagar_assinatura_pendente.html', {
+        'assinatura': assinatura
+    })
+
+#=======================================================================================================

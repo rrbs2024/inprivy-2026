@@ -91,6 +91,8 @@ urlpatterns = [
     path('categoria/<int:categoria_id>/novo/', views_public.forum_novo_topico, name='forum_novo_topico'),
     path('topico/<int:topico_id>/', views_public.forum_topico, name='forum_topico'),
     path('topico/<int:topico_id>/responder/', views_public.forum_responder, name='forum_responder'),
+    path('topico/<int:topico_id>/editar/', views_public.forum_editar_topico, name='forum_editar_topico'),
+
 
     path('fotolog/', views_public.fotolog, name='fotolog'),
 
@@ -100,8 +102,8 @@ urlpatterns = [
 
     path('associados/', views_public.listar_associado, name='listar_associado'),
 
-    path('seguir/<int:id>/', views_public.seguir_associado, name='seguir'),
-    path('deixar/<int:id>/', views_public.deixar_de_seguir, name='deixar'),
+    path('seguir/<int:associado_id>/', views_public.seguir_associado, name='seguir'),
+    path('deixar/<int:associado_id>/', views_public.deixar_de_seguir, name='deixar'),
 
     path('associado/<int:associado_id>/seguidores/', views_public.meus_seguidores_seguindo, name='meus_seguidores_seguindo'),
 
@@ -123,9 +125,14 @@ urlpatterns = [
     path('mensagens/<int:id>/', views_public.detalhe_mensagem, name='detalhe_mensagem'),
 
     path('planos/', views_public.planos, name='planos'),
-    path('planos/<int:plano_id>/', views_public.confirmar_plano, name='confirmar_plano'),
+    path('planos/<int:plano_id>/', views_public.assinar_plano, name='assinar_plano'),
 
     path('pagar_assinatura/<int:assinatura_id>/', views_public.pagar_assinatura, name='pagar_assinatura'),
+
+    # URLs de retorno do pagamento
+    path('assinaturas/<int:assinatura_id>/sucesso/', views_public.assinatura_sucesso, name='assinatura_sucesso'),
+    path('assinaturas/<int:assinatura_id>/falha/', views_public.assinatura_falha, name='assinatura_falha'),
+    path('assinaturas/<int:assinatura_id>/pendente/', views_public.assinatura_pendente, name='assinatura_pendente'),
 
    
     

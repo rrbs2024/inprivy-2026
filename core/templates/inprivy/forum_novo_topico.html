@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Tópico</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>Novo tópico em {{ categoria.nome }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="titulo"
+            placeholder="Título do tópico"
+            required
+            style="width:100%;padding:10px;margin-bottom:10px;"
+        >
+
+        <textarea
+            name="conteudo"
+            rows="5"
+            placeholder="Conteúdo do tópico"
+            required
+            style="width:100%;padding:10px;"
+        ></textarea>
+
+        <button type="submit" class="btn-novo-topico" style="margin-top:10px;">
+            Criar Tópico
+        </button>
+    </form>
+</div>
+</body>
+</html>

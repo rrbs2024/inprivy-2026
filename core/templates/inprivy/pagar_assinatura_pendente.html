@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagamento Pendente - Inprivy</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Pagamento Pendente</h2>
+
+        <p>O pagamento do plano <strong>{{ assinatura.tipoplano.tipoplano_descricao }}</strong> ainda está sendo processado pelo Mercado Pago.</p>
+        <p>Por favor, aguarde alguns minutos e verifique novamente.</p>
+
+        <a href="{% url 'home_public' %}" class="btn-novo-topico" style="display:inline-block;padding:8px 15px;background:#4A90E2;color:#fff;border-radius:8px;text-decoration:none;margin-top:15px;">
+            Voltar para a tela inicial
+        </a>
+    </div>
+</body>
+</html>

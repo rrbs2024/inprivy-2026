@@ -139,7 +139,7 @@
                 <div class="associado-nome">{{ s.seguido.associado_nome }}</div>
             </div>
             {% if s.seguido != request.user.associado %}
-            <form method="POST" action="{% if s.seguido.id in seguindo_ids %}{% url 'deixar_de_seguir' s.seguido.id %}{% else %}{% url 'seguir_associado' s.seguido.id %}{% endif %}">
+            <form method="POST" action="{% if s.seguido.id in seguindo_ids %}{% url 'deixar' s.seguido.id %}{% else %}{% url 'seguir' s.seguido.id %}{% endif %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-seguir">
                     {% if s.seguido.id in seguindo_ids %}
