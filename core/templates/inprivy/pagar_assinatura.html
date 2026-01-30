@@ -12,7 +12,7 @@
         Valor: R$ {{ assinatura.tipoplano.tipoplano_valor }}<br>
         Duração: {{ assinatura.tipoplano.tipoplano_duracao }} dias<br><br>
 
-        <form method="POST">
+        <form method="POST" action="{% url 'pagar_assinatura' assinatura.id %}">
             {% csrf_token %}
             <button type="submit">PAGAR AGORA (teste)</button>
         </form>
@@ -21,3 +21,4 @@
     <a href="{% url 'home_public' %}">Voltar</a>
 </body>
 </html>
+

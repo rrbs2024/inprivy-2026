@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagar Assinatura - Inprivy</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+</head>
+<body>
+    <h2>Pagar assinatura: {{ assinatura.tipoplano.tipoplano_descricao }}</h2>
+    <p>Valor: R$ {{ assinatura.tipoplano.tipoplano_valor }}</p>
+    <p>Duração: {{ assinatura.tipoplano.tipoplano_duracao }} dias</p>
+
+    <div id="wallet_container" style="margin-top:20px;"></div>
+
+    <a href="{% url 'home_public' %}" 
+       style="display:inline-block;padding:8px 15px;background:#4A90E2;color:#fff;border-radius:8px;text-decoration:none;margin-top:15px;">
+        Voltar para a tela inicial
+    </a>
+
+    <script>
+        // Inicializa SDK
+        const mp = new MercadoPago('{{ public_key }}', {
+            locale: 'pt-BR'
+        });
+
+        // Cria o Checkout Bricks
+        mp.bricks().create('wallet', 'wallet_container', {
+            initialization: {
+                preferenceId: '{{ preference_id }}'
+            },
+            callbacks: {
+                onReady: () => {
+                    console.log("Bricks pronto!");
+                },
+                onError: (error) => {
+                    console.error("Erro Bricks:", error);
+                    alert("Erro ao iniciar pagamento. Veja console.");
+                }
+            }
+        });
+    </script>
+</body>
+</html>

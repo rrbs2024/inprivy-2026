@@ -13,6 +13,7 @@ from datetime import timedelta
 from django.utils import timezone
 import mercadopago
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from core.decorators import trial_5_minutos
 from .models import UserClone, TimelinePost, Associado, ForumCategoria, ForumTopico, ForumResposta, TimelineComentario, Seguindo, Evento, PresencaEvento, Grupo, MensagemAssociado, Conversa, TipoPlano, Assinatura
@@ -734,8 +735,7 @@ def planos(request):
 
     # Verifica se já existe assinatura pendente
     assinatura_existente = Assinatura.objects.filter(
-        associado=associado,
-        assinada = False
+        associado=associado       
     ).first()
 
     if assinatura_existente and assinatura_existente.assinada == False:
@@ -744,7 +744,7 @@ def planos(request):
     
     if assinatura_existente and assinatura_existente.assinada == True:
         # Já existe assinatura concluída → vai direto para pagar assinatura
-        return redirect('pagar_assinatura', plano_id=assinatura_existente.tipoplano.id)        
+        return redirect('pagar_assinatura',assinatura_id=assinatura_existente.id)     
 
     # Caso não exista assinatura → lista todos os planos normalmente
     
@@ -768,7 +768,7 @@ def assinar_plano(request, plano_id):
     ).first()  # pega a primeira, se existir
 
     if request.method == 'POST':
-        if   assinatura_existente:
+        if  assinatura_existente:
             assinatura_existente.assinada = True
             assinatura_existente.save()
             assinatura = assinatura_existente
@@ -823,36 +823,57 @@ def pagar_assinatura_origem(request, assinatura_id):
 @login_required
 def pagar_assinatura(request, assinatura_id):
     assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
-
+    
+    print("METHOD:", request.method)
+   
     if request.method == 'POST':
         sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
 
-        # Cria preferência de pagamento
+        # Cria preferência para Bricks
         preference_data = {
             "items": [
                 {
-                    "title": f"Assinatura {assinatura.tipo.nome}",
+                    "title": f"Assinatura {assinatura.tipoplano.tipoplano_descricao}",
                     "quantity": 1,
-                    "unit_price": float(assinatura.tipo.valor),
+                    "unit_price": float(assinatura.tipoplano.tipoplano_valor),
                 }
             ],
             "back_urls": {
-                "success": request.build_absolute_uri(f"/assinaturas/{assinatura.id}/sucesso/"),
-                "failure": request.build_absolute_uri(f"/assinaturas/{assinatura.id}/falha/"),
-                "pending": request.build_absolute_uri(f"/assinaturas/{assinatura.id}/pendente/"),
+                "success": f"https://elucidative-jesica-brotherly.ngrok-free.dev/assinaturas/{assinatura.id}/sucesso/",
+                "failure": f"https://elucidative-jesica-brotherly.ngrok-free.dev/assinaturas/{assinatura.id}/falha/",
+                "pending": f"https://elucidative-jesica-brotherly.ngrok-free.dev/assinaturas/{assinatura.id}/pendente/",
             },
-            "auto_return": "approved"
+            "auto_return": "approved",
+            "payment_methods": {"excluded_payment_types": [], "installments": 1}
         }
 
         preference_response = sdk.preference().create(preference_data)
-        payment_url = preference_response["response"]["init_point"]
 
-        # Redireciona o usuário para a página de pagamento Mercado Pago
-        return redirect(payment_url)
+        # 🚨 DEBUG: imprime a resposta completa no console
+        print("===== RESPOSTA MERCADO PAGO =====")
+        print(preference_response)
+        print("=================================")
+
+        # Pega o ID da preferência para usar no Bricks
+        preference_id = preference_response.get("response", {}).get("id")
+
+        if not preference_id:
+            return render(request, 'inprivy/pagar_assinatura_falha.html', {
+                'assinatura': assinatura,
+                'erro': 'Não foi possível gerar a preferência de pagamento. Veja o console para detalhes.'
+            })
+
+        # ⚡ Renderiza template com o Bricks e envia preference_id
+        return render(request, 'inprivy/pagar_assinatura_bricks.html', {
+            'assinatura': assinatura,
+            'preference_id': preference_id,
+            'public_key': settings.MERCADOPAGO_PUBLIC_KEY
+        })
 
     return render(request, 'inprivy/pagar_assinatura.html', {
         'assinatura': assinatura
     })
+
 
 #=======================================================================================================
 @login_required
@@ -876,10 +897,25 @@ def assinatura_sucesso(request, assinatura_id):
 #=======================================================================================================
 @login_required
 def assinatura_falha(request, assinatura_id):
-    assinatura = get_object_or_404(Assinatura, id=assinatura_id, associado=request.user.associado)
+    assinatura = get_object_or_404(
+        Assinatura,
+        id=assinatura_id,
+        associado=request.user.associado
+    )
+
+    retorno_mp = {
+        'status': request.GET.get('status', ''),
+        'status_detail': request.GET.get('status_detail', ''),
+        'collection_status': request.GET.get('collection_status', ''),
+        'payment_id': request.GET.get('payment_id', ''),
+    }
+
     return render(request, 'inprivy/pagar_assinatura_falha.html', {
-        'assinatura': assinatura
+        'assinatura': assinatura,
+        'retorno_mp': retorno_mp
     })
+
+
 
 #=======================================================================================================
 @login_required
@@ -890,3 +926,33 @@ def assinatura_pendente(request, assinatura_id):
     })
 
 #=======================================================================================================
+
+
+
+@csrf_exempt
+def webhook_mercadopago(request):
+    if request.method == 'POST':
+        import mercadopago
+        from django.conf import settings
+
+        print("===== WEBHOOK MERCADO PAGO =====")
+
+        data = request.POST or request.GET
+        payment_id = data.get('data.id') or data.get('payment_id')
+
+        print("payment_id recebido:", payment_id)
+
+        if not payment_id:
+            return HttpResponse(status=200)
+
+        sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+        payment_info = sdk.payment().get(payment_id)
+
+        print("status real:", payment_info["response"]["status"])
+        print("detalhe:", payment_info["response"]["status_detail"])
+
+        print("================================")
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=400)
+

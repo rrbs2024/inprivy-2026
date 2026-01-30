@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-l0_!&(#z@f00s%30hlrqa0*hs#om^xnse!hrhj4-jf5nfzi^3l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'elucidative-jesica-brotherly.ngrok-free.dev',
+]
 
 
 # Application definition
@@ -38,7 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'rest_framework',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -144,4 +155,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Configurações Mercado Pago
 # =========================
 MERCADOPAGO_ACCESS_TOKEN = "APP_USR-2875420800183100-101508-25f218bca852b111791d174003935fdb-373794284"
+MERCADOPAGO_PUBLIC_KEY = "APP_USR-f40acf0c-8a5e-4027-a798-9b18c21a49c5"
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://elucidative-jesica-brotherly.ngrok-free.dev',
+]

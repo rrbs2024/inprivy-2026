@@ -134,7 +134,8 @@ urlpatterns = [
     path('assinaturas/<int:assinatura_id>/falha/', views_public.assinatura_falha, name='assinatura_falha'),
     path('assinaturas/<int:assinatura_id>/pendente/', views_public.assinatura_pendente, name='assinatura_pendente'),
 
-   
+    path('webhook/mercadopago/', views_public.webhook_mercadopago, name='webhook_mercadopago'),
+
     
     
 
